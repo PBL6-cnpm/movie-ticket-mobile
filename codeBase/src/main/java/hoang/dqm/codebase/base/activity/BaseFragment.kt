@@ -42,9 +42,9 @@ abstract class BaseFragment<VB : ViewBinding, VM : BaseViewModel> : Fragment(),
     protected val viewModel: VM by lazy {
         val clazz = genericViewModel<VM>()
         if (viewModelFactory != null) {
-            ViewModelProvider(requireActivity(), viewModelFactory!!)[clazz]
+            ViewModelProvider(this, viewModelFactory!!)[clazz]
         } else {
-            ViewModelProvider(requireActivity())[clazz]
+            ViewModelProvider(this)[clazz]
         }
     }
     protected var activity: Activity? = null

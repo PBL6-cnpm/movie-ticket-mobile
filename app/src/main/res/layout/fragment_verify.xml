@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_background"
+    tools:context=".ui.verify.VerifyFragment">
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/line_start"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.06" />
+
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/line_end"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.94" />
+
+    <ImageView
+        android:id="@+id/btn_back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_back"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintStart_toStartOf="@id/line_start"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.05"
+        app:layout_constraintWidth_percent="0.1" />
+
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/baloo2_semibold"
+        android:text="@string/text_check_your_email"
+        android:textColor="@color/white"
+        android:textSize="@dimen/_20ssp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@id/line_start"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.18" />
+
+    <TextView
+        android:id="@+id/tv_description"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/baloo2_semibold"
+        android:textColor="@color/color_description"
+        android:textSize="@dimen/_16ssp"
+        app:layout_constraintEnd_toEndOf="@id/line_end"
+        app:layout_constraintStart_toStartOf="@id/tv_title"
+        app:layout_constraintTop_toBottomOf="@id/tv_title"
+        tools:text="We sent a reset link to contact@dscode...com" />
+
+    <TextView
+        android:id="@+id/tv_description_2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/baloo2_semibold"
+        android:text="@string/text_enter_6_digit_code_that_mentioned_in_the_email"
+        android:textColor="@color/color_description"
+        android:textSize="@dimen/_16ssp"
+        app:layout_constraintEnd_toEndOf="@id/line_end"
+        app:layout_constraintStart_toStartOf="@id/tv_title"
+        app:layout_constraintTop_toBottomOf="@id/tv_description" />
+
+    <EditText
+        android:id="@+id/num_1"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="@dimen/_12dp"
+        android:background="@drawable/edt_border"
+        android:fontFamily="@font/baloo2_semibold"
+        android:gravity="center"
+        android:maxLength="1"
+        android:textColor="@color/white"
+        android:textSize="@dimen/_26ssp"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toStartOf="@id/num_2"
+        app:layout_constraintStart_toStartOf="@id/line_start"
+        app:layout_constraintTop_toBottomOf="@id/tv_description_2"
+        app:layout_constraintWidth_percent="0.12"
+        tools:text="55" />
+
+    <EditText
+        android:id="@+id/num_2"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="@dimen/_12dp"
+        android:background="@drawable/edt_border"
+        android:fontFamily="@font/baloo2_semibold"
+        android:gravity="center"
+        android:maxLength="1"
+        android:textColor="@color/white"
+        android:textSize="@dimen/_26ssp"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toStartOf="@id/num_3"
+        app:layout_constraintStart_toEndOf="@id/num_1"
+        app:layout_constraintTop_toBottomOf="@id/tv_description_2"
+        app:layout_constraintWidth_percent="0.12"
+        tools:text="55" />
+
+    <EditText
+        android:id="@+id/num_3"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="@dimen/_12dp"
+        android:background="@drawable/edt_border"
+        android:fontFamily="@font/baloo2_semibold"
+        android:gravity="center"
+        android:maxLength="1"
+        android:textColor="@color/white"
+        android:textSize="@dimen/_26ssp"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toStartOf="@id/num_4"
+        app:layout_constraintStart_toEndOf="@id/num_2"
+        app:layout_constraintTop_toBottomOf="@id/tv_description_2"
+        app:layout_constraintWidth_percent="0.12"
+        tools:text="55" />
+
+    <EditText
+        android:id="@+id/num_4"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="@dimen/_12dp"
+        android:background="@drawable/edt_border"
+        android:fontFamily="@font/baloo2_semibold"
+        android:gravity="center"
+        android:maxLength="1"
+        android:textColor="@color/white"
+        android:textSize="@dimen/_26ssp"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toStartOf="@id/num_5"
+        app:layout_constraintStart_toEndOf="@id/num_3"
+        app:layout_constraintTop_toBottomOf="@id/tv_description_2"
+        app:layout_constraintWidth_percent="0.12"
+        tools:text="55" />
+
+    <EditText
+        android:id="@+id/num_5"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="@dimen/_12dp"
+        android:background="@drawable/edt_border"
+        android:fontFamily="@font/baloo2_semibold"
+        android:gravity="center"
+        android:maxLength="1"
+        android:textColor="@color/white"
+        android:textSize="@dimen/_26ssp"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toStartOf="@id/num_6"
+        app:layout_constraintStart_toEndOf="@id/num_4"
+        app:layout_constraintTop_toBottomOf="@id/tv_description_2"
+        app:layout_constraintWidth_percent="0.12"
+        tools:text="55" />
+
+    <EditText
+        android:id="@+id/num_6"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="@dimen/_12dp"
+        android:background="@drawable/edt_border"
+        android:fontFamily="@font/baloo2_semibold"
+        android:gravity="center"
+        android:maxLength="1"
+        android:textColor="@color/white"
+        android:textSize="@dimen/_26ssp"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toEndOf="@id/line_end"
+        app:layout_constraintStart_toEndOf="@id/num_5"
+        app:layout_constraintTop_toBottomOf="@id/tv_description_2"
+        app:layout_constraintWidth_percent="0.12"
+        tools:text="55" />
+
+    <ImageView
+        android:id="@+id/btn_verify"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="@dimen/_16dp"
+        android:layout_marginBottom="@dimen/_8dp"
+        android:src="@drawable/shape_bg_verify"
+        app:layout_constraintDimensionRatio="376:56"
+        app:layout_constraintEnd_toEndOf="@id/line_end"
+        app:layout_constraintStart_toStartOf="@id/line_start"
+        app:layout_constraintTop_toBottomOf="@id/num_1" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/baloo2_semibold"
+        android:text="@string/text_verify_code"
+        android:textColor="@color/white"
+        android:textSize="@dimen/_16ssp"
+        app:layout_constraintBottom_toBottomOf="@id/btn_verify"
+        app:layout_constraintEnd_toEndOf="@id/btn_verify"
+        app:layout_constraintStart_toStartOf="@id/btn_verify"
+        app:layout_constraintTop_toTopOf="@id/btn_verify" />
+
+    <TextView
+        android:id="@+id/have_email"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/_4dp"
+        android:fontFamily="@font/baloo2_semibold"
+        android:text="@string/text_haven_t_got_the_email_yet"
+        android:textColor="@color/color_description"
+        android:textSize="@dimen/_16ssp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/tv_email"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toStartOf="@id/line_start" />
+
+    <TextView
+        android:id="@+id/tv_email"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/baloo2_semibold"
+        android:text="@string/text_resend_email"
+        android:textColor="#648DDB"
+        android:textSize="@dimen/_16ssp"
+        app:layout_constraintBottom_toBottomOf="@id/have_email"
+        app:layout_constraintEnd_toEndOf="@id/line_end"
+        app:layout_constraintStart_toEndOf="@id/have_email" />
+</androidx.constraintlayout.widget.ConstraintLayout>
