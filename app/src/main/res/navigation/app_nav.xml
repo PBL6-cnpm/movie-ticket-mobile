@@ -1,6 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/app_nav">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/app_nav"
+    app:startDestination="@id/forgotPasswordFragment">
 
+    <fragment
+        android:id="@+id/forgotPasswordFragment"
+        android:name="com.pbl6.pbl6_cinestech.ui.forgot.ForgotPasswordFragment"
+        android:label="fragment_forgot_password"
+        tools:layout="@layout/fragment_forgot_password" />
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.pbl6.pbl6_cinestech.ui.login.LoginFragment"
+        android:label="fragment_login"
+        tools:layout="@layout/fragment_login" />
+    <fragment
+        android:id="@+id/registerFragment"
+        android:name="com.pbl6.pbl6_cinestech.ui.register.RegisterFragment"
+        android:label="fragment_register"
+        tools:layout="@layout/fragment_register" />
+    <fragment
+        android:id="@+id/verifyFragment"
+        android:name="com.pbl6.pbl6_cinestech.ui.verify.VerifyFragment"
+        android:label="fragment_verify"
+        tools:layout="@layout/fragment_verify" />
+    <fragment
+        android:id="@+id/newPasswordFragment"
+        android:name="com.pbl6.pbl6_cinestech.ui.new_password.NewPasswordFragment"
+        android:label="fragment_new_password"
+        tools:layout="@layout/fragment_new_password" />
+    <fragment
+        android:id="@+id/passwordChangedFragment"
+        android:name="com.pbl6.pbl6_cinestech.ui.password_changed.PasswordChangedFragment"
+        android:label="fragment_password_changed"
+        tools:layout="@layout/fragment_password_changed" />
 </navigation>

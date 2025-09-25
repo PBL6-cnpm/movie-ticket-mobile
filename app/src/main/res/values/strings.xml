@@ -1,3 +1,33 @@
 <resources>
-    <string name="app_name">PBL6_Cinestech</string>
+    <string name="app_name">Cinestech</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="text_welcome_back">Welcome Back !</string>
+    <string name="text_login_in_to_your_account">Login In to your account</string>
+    <string name="text_email">Email:</string>
+    <string name="text_password">Password</string>
+    <string name="text_enter_email">Enter Email</string>
+    <string name="text_enter_password">Enter Password</string>
+    <string name="text_forgot_password">Forgot Password?</string>
+    <string name="text_login_with_google">Login With Google</string>
+    <string name="text_don_t_have_account">Don,t have account?</string>
+    <string name="text_register">Register</string>
+    <string name="text_login">Login</string>
+    <string name="text_create_account_and_enjoy_all_services">Create account and enjoy all services</string>
+    <string name="text_confirm_password">Confirm Password</string>
+    <string name="text_do_you_have_an_account">Do you have an account?</string>
+    <string name="text_title_forgot_password">Forgot Password</string>
+    <string name="text_please_enter_yout_email_to_reset_your_password">Please enter yout email to reset your password</string>
+    <string name="text_reset_password">Reset Password</string>
+    <string name="text_check_your_email">Check your Email</string>
+    <string name="text_enter_6_digit_code_that_mentioned_in_the_email">Enter 6 digit code that mentioned in the email</string>
+    <string name="text_verify_code">Verify Code</string>
+    <string name="text_haven_t_got_the_email_yet">Haven\'t got the email yet?</string>
+    <string name="text_resend_email">Resend email</string>
+    <string name="text_create_new_password">Create new password</string>
+    <string name="text_create_a_new_password_ensure_it_differs_from_previous_ones_for_security">Create a new password. Ensure it differs from previous ones for security</string>
+    <string name="text_update_password">Update password</string>
+    <string name="text_re_enter_password">Re-enter Password</string>
+    <string name="text_password_changed">Password Changed</string>
+    <string name="text_password_changed_successfully_you_can_login_with_a_new_password">Password changed successfully, you can login with a new password</string>
 </resources>

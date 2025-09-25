@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_background"
+    tools:context=".ui.register.RegisterFragment">
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/line_start"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.06" />
+
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/line_end"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.94" />
+
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/baloo2_semibold"
+        android:text="@string/text_register"
+        android:textColor="@color/white"
+        android:textSize="@dimen/_20ssp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@id/line_start"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.12" />
+
+    <TextView
+        android:id="@+id/tv_description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/baloo2_semibold"
+        android:text="@string/text_create_account_and_enjoy_all_services"
+        android:textColor="@color/color_description"
+        android:textSize="@dimen/_16ssp"
+        app:layout_constraintStart_toStartOf="@id/tv_title"
+        app:layout_constraintTop_toBottomOf="@id/tv_title" />
+
+    <TextView
+        android:id="@+id/tv_email"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_24dp"
+        android:fontFamily="@font/baloo2_semibold"
+        android:text="@string/text_email"
+        android:textColor="@color/white"
+        android:textSize="@dimen/_18ssp"
+        app:layout_constraintStart_toStartOf="@id/line_start"
+        app:layout_constraintTop_toBottomOf="@id/tv_description" />
+
+    <EditText
+        android:id="@+id/edt_email"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/edt_border"
+        android:drawableStart="@drawable/icon_mail"
+        android:drawablePadding="@dimen/_8dp"
+        android:drawableTint="#808080"
+        android:fontFamily="@font/baloo2_semibold"
+        android:hint="@string/text_enter_email"
+        android:inputType="textEmailAddress"
+        android:paddingHorizontal="@dimen/_10dp"
+        android:paddingVertical="@dimen/_12dp"
+        android:textColor="#808080"
+        android:textColorHint="#808080"
+        android:textSize="@dimen/_16ssp"
+        app:layout_constraintEnd_toEndOf="@id/line_end"
+        app:layout_constraintStart_toStartOf="@id/line_start"
+        app:layout_constraintTop_toBottomOf="@id/tv_email" />
+
+    <TextView
+        android:id="@+id/tv_password"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_12dp"
+        android:fontFamily="@font/baloo2_semibold"
+        android:text="@string/text_password"
+        android:textColor="@color/white"
+        android:textSize="@dimen/_18ssp"
+        app:layout_constraintStart_toStartOf="@id/line_start"
+        app:layout_constraintTop_toBottomOf="@id/edt_email" />
+
+    <EditText
+        android:id="@+id/edt_password"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/edt_border"
+        android:drawableStart="@drawable/icon_password"
+        android:drawableEnd="@drawable/icon_invisible"
+        android:drawablePadding="@dimen/_8dp"
+        android:drawableTint="#808080"
+        android:fontFamily="@font/baloo2_semibold"
+        android:hint="@string/text_enter_password"
+        android:inputType="textPassword"
+        android:paddingHorizontal="@dimen/_10dp"
+        android:paddingVertical="@dimen/_12dp"
+        android:textColor="@color/white"
+        android:textColorHint="#808080"
+        android:textSize="@dimen/_16ssp"
+        app:layout_constraintEnd_toEndOf="@id/line_end"
+        app:layout_constraintStart_toStartOf="@id/line_start"
+        app:layout_constraintTop_toBottomOf="@id/tv_password" />
+
+    <TextView
+        android:id="@+id/tv_confirm_password"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_12dp"
+        android:fontFamily="@font/baloo2_semibold"
+        android:text="@string/text_confirm_password"
+        android:textColor="@color/white"
+        android:textSize="@dimen/_18ssp"
+        app:layout_constraintStart_toStartOf="@id/line_start"
+        app:layout_constraintTop_toBottomOf="@id/edt_password" />
+
+    <EditText
+        android:id="@+id/edt_confirm_password"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/edt_border"
+        android:drawableStart="@drawable/icon_password"
+        android:drawableEnd="@drawable/icon_invisible"
+        android:drawablePadding="@dimen/_8dp"
+        android:drawableTint="#808080"
+        android:fontFamily="@font/baloo2_semibold"
+        android:hint="@string/text_re_enter_password"
+        android:inputType="textPassword"
+        android:paddingHorizontal="@dimen/_10dp"
+        android:paddingVertical="@dimen/_12dp"
+        android:textColor="@color/white"
+        android:textColorHint="#808080"
+        android:textSize="@dimen/_16ssp"
+        app:layout_constraintEnd_toEndOf="@id/line_end"
+        app:layout_constraintStart_toStartOf="@id/line_start"
+        app:layout_constraintTop_toBottomOf="@id/tv_confirm_password" />
+
+
+    <ImageView
+        android:id="@+id/btn_register"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="@dimen/_8dp"
+        android:src="@drawable/shape_bg_enter"
+        app:layout_constraintBottom_toTopOf="@id/btn_login_w_google"
+        app:layout_constraintDimensionRatio="376:56"
+        app:layout_constraintEnd_toEndOf="@id/line_end"
+        app:layout_constraintStart_toStartOf="@id/line_start" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/baloo2_semibold"
+        android:text="@string/text_register"
+        android:textColor="@color/white"
+        android:textSize="@dimen/_16ssp"
+        app:layout_constraintBottom_toBottomOf="@id/btn_register"
+        app:layout_constraintEnd_toEndOf="@id/btn_register"
+        app:layout_constraintStart_toStartOf="@id/btn_register"
+        app:layout_constraintTop_toTopOf="@id/btn_register" />
+
+    <ImageView
+        android:id="@+id/btn_login_w_google"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="@dimen/_4dp"
+        android:src="@drawable/shape_bg_login_w_google"
+        app:layout_constraintBottom_toTopOf="@id/tv_have_account"
+        app:layout_constraintDimensionRatio="376:56"
+        app:layout_constraintEnd_toEndOf="@id/line_end"
+        app:layout_constraintStart_toStartOf="@id/line_start" />
+
+    <ImageView
+        android:id="@+id/ic_google"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginEnd="@dimen/_4dp"
+        android:src="@drawable/ic_google"
+        app:layout_constraintBottom_toBottomOf="@id/btn_login_w_google"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toStartOf="@id/tv_login_w_google"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toStartOf="@id/btn_login_w_google"
+        app:layout_constraintTop_toTopOf="@id/btn_login_w_google"
+        app:layout_constraintWidth_percent="0.05" />
+
+    <TextView
+        android:id="@+id/tv_login_w_google"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/baloo2_semibold"
+        android:text="@string/text_login_with_google"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_16ssp"
+        app:layout_constraintBottom_toBottomOf="@id/btn_login_w_google"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/ic_google"
+        app:layout_constraintTop_toTopOf="@id/btn_login_w_google" />
+
+    <TextView
+        android:id="@+id/tv_have_account"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/_4dp"
+        android:fontFamily="@font/baloo2_semibold"
+        android:text="@string/text_do_you_have_an_account"
+        android:textColor="@color/color_description"
+        android:textSize="@dimen/_16ssp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/tv_register"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toStartOf="@id/line_start" />
+
+    <TextView
+        android:id="@+id/tv_register"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/baloo2_semibold"
+        android:text="@string/text_login"
+        android:textColor="@color/color_focus_ebcc2b"
+        android:textSize="@dimen/_16ssp"
+        app:layout_constraintBottom_toBottomOf="@id/tv_have_account"
+        app:layout_constraintEnd_toEndOf="@id/line_end"
+        app:layout_constraintStart_toEndOf="@id/tv_have_account" />
+</androidx.constraintlayout.widget.ConstraintLayout>
