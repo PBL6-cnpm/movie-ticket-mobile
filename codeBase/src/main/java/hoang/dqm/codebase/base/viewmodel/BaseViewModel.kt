@@ -27,12 +27,8 @@ import kotlin.coroutines.CoroutineContext
 
 abstract class BaseViewModel: ViewModel(), DefaultLifecycleObserver, CoroutineScope {
     private val viewModelJob = SupervisorJob()
-    // la 1 job dac biet giup quan ly coroutine con, khi 1 coroutine bi loi thi cac coroutine khac khong bi huy
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main + viewModelJob
-    // giup coroutine chay tren main thread (Dispatchers.Main) va duoc huy khi viewmodel bi huy (viewmodeljob)
-    //Dispatcher.Main ->  de chay coroutine tren UI thread
-    // viewModelJob -> de quan ly vong doi coroutine
 
     val isLoading by lazy { MutableLiveData<Boolean>() }
     private var onError: ((err:String?) -> Unit)? = null

@@ -79,6 +79,39 @@
         app:layout_constraintTop_toBottomOf="@id/tv_email" />
 
     <TextView
+        android:id="@+id/tv_fullname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_12dp"
+        android:fontFamily="@font/baloo2_semibold"
+        android:text="@string/text_full_name"
+        android:textColor="@color/white"
+        android:textSize="@dimen/_18ssp"
+        app:layout_constraintStart_toStartOf="@id/line_start"
+        app:layout_constraintTop_toBottomOf="@id/edt_email" />
+
+
+    <EditText
+        android:id="@+id/edt_fullname"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/edt_border"
+        android:drawableStart="@drawable/icon_mail"
+        android:drawablePadding="@dimen/_8dp"
+        android:drawableTint="#808080"
+        android:fontFamily="@font/baloo2_semibold"
+        android:hint="@string/text_enter_email"
+        android:inputType="text"
+        android:paddingHorizontal="@dimen/_10dp"
+        android:paddingVertical="@dimen/_12dp"
+        android:textColor="#808080"
+        android:textColorHint="#808080"
+        android:textSize="@dimen/_16ssp"
+        app:layout_constraintEnd_toEndOf="@id/line_end"
+        app:layout_constraintStart_toStartOf="@id/line_start"
+        app:layout_constraintTop_toBottomOf="@id/tv_fullname" />
+
+    <TextView
         android:id="@+id/tv_password"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -88,7 +121,7 @@
         android:textColor="@color/white"
         android:textSize="@dimen/_18ssp"
         app:layout_constraintStart_toStartOf="@id/line_start"
-        app:layout_constraintTop_toBottomOf="@id/edt_email" />
+        app:layout_constraintTop_toBottomOf="@id/edt_fullname" />
 
     <EditText
         android:id="@+id/edt_password"
@@ -216,12 +249,12 @@
         android:textColor="@color/color_description"
         android:textSize="@dimen/_16ssp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/tv_register"
+        app:layout_constraintEnd_toStartOf="@id/tv_login"
         app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintStart_toStartOf="@id/line_start" />
 
     <TextView
-        android:id="@+id/tv_register"
+        android:id="@+id/tv_login"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/baloo2_semibold"

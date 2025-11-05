@@ -12,5 +12,7 @@ data class AppInfo(
     val appId: String,
     @SerializedName("app_name")
     val appName: String,
+    @SerializedName("icon")
+    val icon: Int,
 ) : Parcelable {
 }

@@ -33,4 +33,8 @@ abstract class BaseMainActivity<VB : ViewBinding, VM : BaseViewModel> : BaseActi
         findViewById<View>(R.id.buttonSetting).singleClick { openSettingNetWork() }
     }
 
+    override fun initData() {
+
+    }
+
 }
