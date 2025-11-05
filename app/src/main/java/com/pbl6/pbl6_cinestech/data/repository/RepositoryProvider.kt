@@ -23,4 +23,9 @@ object RepositoryProvider {
     val seatRepository: SeatRepository by lazy {
         SeatRepository(NetworkProvider.seatApiService)
     }
+
+    val refreshmentsRepository: RefreshmentsRepository by lazy {
+        RefreshmentsRepository(NetworkProvider.refreshmentsApiService)
+    }
+
 }

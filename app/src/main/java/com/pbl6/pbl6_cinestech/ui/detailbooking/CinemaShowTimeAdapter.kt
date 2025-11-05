@@ -5,7 +5,7 @@ import com.pbl6.pbl6_cinestech.data.model.response.CinemaShowTime
 import com.pbl6.pbl6_cinestech.databinding.ItemCinemaShowtimeBinding
 import hoang.dqm.codebase.base.adapter.BaseRecyclerViewAdapter
 
-class CinemaShowTimeAdapter(val duration: Int,val listener: (idShowTime: String) -> Unit ): BaseRecyclerViewAdapter<CinemaShowTime, ItemCinemaShowtimeBinding>() {
+class CinemaShowTimeAdapter(val duration: Int,val listener: (idShowTime: String, time: String) -> Unit ): BaseRecyclerViewAdapter<CinemaShowTime, ItemCinemaShowtimeBinding>() {
     override fun bindData(
         binding: ItemCinemaShowtimeBinding,
         item: CinemaShowTime,
@@ -18,7 +18,7 @@ class CinemaShowTimeAdapter(val duration: Int,val listener: (idShowTime: String)
         val showTimeAdapter =  ShowTimeAdapter(item.showTime.times, duration)
         binding.rvShowTime.adapter = showTimeAdapter
         showTimeAdapter.setOnClickItemRecyclerView { _, position ->
-            listener.invoke(item.showTime.times[position].id)
+            listener.invoke(item.showTime.times[position].id, item.showTime.times[position].time)
         }
         binding.rvShowTime.layoutManager = GridLayoutManager(context, 3)
         binding.rvShowTime.setHasFixedSize(true)

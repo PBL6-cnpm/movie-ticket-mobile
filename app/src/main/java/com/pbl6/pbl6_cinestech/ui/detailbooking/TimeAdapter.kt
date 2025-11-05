@@ -6,7 +6,6 @@ import com.pbl6.pbl6_cinestech.databinding.ItemShowTimeDayBinding
 import hoang.dqm.codebase.base.adapter.BaseRecyclerViewAdapter
 import java.text.SimpleDateFormat
 import java.util.Locale
-import java.util.TimeZone
 
 class TimeAdapter : BaseRecyclerViewAdapter<DayOfWeek, ItemShowTimeDayBinding>() {
     private var itemSelected = 0

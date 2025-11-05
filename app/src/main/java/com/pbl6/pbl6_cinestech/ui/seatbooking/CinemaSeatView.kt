@@ -238,7 +238,7 @@ class CinemaSeatView @JvmOverloads constructor(
     private fun updateGridBounds() {
         gridBounds.set(0f, 0f, gridWidth * seatSize, gridHeight * seatSize)
         matrix.mapRect(gridBounds)
-        viewBounds.set(0f, 0f, width.toFloat(), height.toFloat())
+        viewBounds.set(0f, 0f, width.toFloat(), height*0.6f)
         Log.d("onSizeChanged", "onSizeChanged gridboud: ${width.toFloat()-(gridWidth*seatSize)} ${height.toFloat()-(gridHeight*seatSize)}")
     }
 
@@ -413,11 +413,11 @@ class CinemaSeatView @JvmOverloads constructor(
                 val rect = RectF(seatX, rowY, seatX + seatSize, rowY + seatSize)
 
                 if (rect.contains(x, y)) {
-                    return true // Đã chạm vào một chiếc ghế
+                    return true
                 }
             }
         }
-        return false // Không chạm vào ghế nào cả
+        return false
     }
 
     private fun getTouchPoint(x: Float, y: Float): FloatArray {

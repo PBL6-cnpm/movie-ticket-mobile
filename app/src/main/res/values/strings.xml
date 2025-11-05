@@ -56,4 +56,12 @@
     <string name="text_21_00_24_00">21:00 - 24:00</string>
     <string name="text_open_your_email_to_retrieve_your_new_password">Open your email to retrieve your new password.</string>
     <string name="text_find_the_way">Find the way</string>
+    <string name="text_change_showtime">Change showtime</string>
+    <string name="text_reschedule">Reschedule</string>
+    <string name="text_price">Price:</string>
+    <string name="text_book_tickets">Book Tickets</string>
+    <string name="text_please_make_sure_to_select_at_least_one_seat">Please make sure to select at least one seat.</string>
+    <string name="text_combo_popcorn_and_drink">Combo – Popcorn and Drink</string>
+    <string name="text_crunchy_popcorn_refreshing_drink_enjoy">Crunchy popcorn, refreshing drink – Enjoy!</string>
+    <string name="text_refreshments">Refreshments</string>
 </resources>

@@ -1,5 +1,7 @@
 package com.pbl6.pbl6_cinestech.ui.seatbooking
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.asLiveData
@@ -14,6 +16,17 @@ import kotlinx.coroutines.launch
 class SeatBookingViewModel(
     private val seatRepository: SeatRepository
 ) : BaseViewModel() {
+    private val _price: MutableLiveData<Int> = MutableLiveData(0)
+    val price : LiveData<Int> get() = _price
+    fun setPrice(value: Int){
+        _price.value = value
+    }
+    fun addSeat(priceSeat:Int){
+        _price.value = _price.value?.plus(priceSeat)
+    }
+    fun removeSeat(priceSeat: Int){
+        _price.value = _price.value?.minus(priceSeat)
+    }
     private val _allSeatResult = MutableStateFlow<Response<SeatBookingResponse>?>(null)
     val allSeatResult: MutableStateFlow<Response<SeatBookingResponse>?> = _allSeatResult
     val allSeatResultLiveData = allSeatResult.asLiveData()

@@ -4,6 +4,7 @@ import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.annotation.RequiresApi
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.pbl6.pbl6_cinestech.R
@@ -11,6 +12,7 @@ import com.pbl6.pbl6_cinestech.data.model.response.CinemaShowTime
 import com.pbl6.pbl6_cinestech.data.model.response.DayOfWeek
 import com.pbl6.pbl6_cinestech.data.repository.RepositoryProvider
 import com.pbl6.pbl6_cinestech.databinding.FragmentDetailBookingBinding
+import com.pbl6.pbl6_cinestech.ui.main.MainViewModel
 import hoang.dqm.codebase.base.activity.BaseFragment
 import hoang.dqm.codebase.base.activity.navigate
 import java.time.LocalDate
@@ -21,6 +23,7 @@ import java.util.Locale
 
 
 class DetailBookingFragment : BaseFragment<FragmentDetailBookingBinding, DetailBookingViewModel>() {
+    private val mainViewModel by activityViewModels <MainViewModel>()
     override val viewModelFactory: ViewModelProvider.Factory
         get() = DetailBookingViewModel.DetailBookingViewModelFactory(
             RepositoryProvider.movieRepository,
@@ -44,12 +47,14 @@ class DetailBookingFragment : BaseFragment<FragmentDetailBookingBinding, DetailB
 
 
     private val cinemasShowTimeAdapter: CinemaShowTimeAdapter by lazy {
-        CinemaShowTimeAdapter(duration?:0, {idShowTime ->
+        CinemaShowTimeAdapter(duration?:0, {idShowTime, time ->
             val bundle = Bundle().apply {
                 putString("idShowTime", idShowTime)
                 putString("branchName",
                     this@DetailBookingFragment.adapterBranch.getSelectedBranch().name
                 )
+                putString("dayValue", this@DetailBookingFragment.timeAdapter.getDaySelected().value)
+                putString("timeStart", time)
             }
             navigate(R.id.seatBookingFragment, bundle)
         })

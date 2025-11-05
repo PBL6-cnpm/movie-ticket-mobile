@@ -51,6 +51,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>() {
                 val bundle = Bundle().apply {
                     putString("movieId", realItem.id)
                 }
+                mainViewModel.setMovieSelected(realItem)
                 navigate(R.id.detailMovieFragment, bundle)
             } else {
                 // navigate list movie

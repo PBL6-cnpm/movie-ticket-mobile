@@ -2,6 +2,7 @@ package com.pbl6.pbl6_cinestech.ui.detailmovie
 
 import android.os.Bundle
 import androidx.core.os.bundleOf
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navOptions
@@ -10,6 +11,7 @@ import com.pbl6.pbl6_cinestech.R
 import com.pbl6.pbl6_cinestech.data.model.response.GenreResponse
 import com.pbl6.pbl6_cinestech.data.repository.RepositoryProvider
 import com.pbl6.pbl6_cinestech.databinding.FragmentDetailMovieBinding
+import com.pbl6.pbl6_cinestech.ui.main.MainViewModel
 import hoang.dqm.codebase.base.activity.BaseFragment
 import hoang.dqm.codebase.base.activity.navigate
 import hoang.dqm.codebase.base.activity.popBackStack
@@ -21,6 +23,8 @@ import java.util.TimeZone
 
 
 class DetailMovieFragment : BaseFragment<FragmentDetailMovieBinding, DetailMovieViewModel>() {
+    private val mainViewModel by activityViewModels <MainViewModel>()
+
     override val viewModelFactory: ViewModelProvider.Factory
         get() = DetailMovieViewModel.DetailViewModelFactory(
             RepositoryProvider.movieRepository

@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/topbar_1d273a"
-    tools:context=".ui.seatbooking.SeatBookingFragment">
+    tools:context=".ui.refreshments.RefreshmentsFragment">
+
 
     <ImageView
         android:id="@+id/btn_back"
@@ -24,33 +25,67 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/_16sdp"
         android:fontFamily="@font/baloo2_semibold"
+        android:text="@string/text_combo_popcorn_and_drink"
         android:textColor="@color/white"
         android:textSize="@dimen/_18ssp"
         app:layout_constraintBottom_toBottomOf="@id/btn_back"
         app:layout_constraintStart_toEndOf="@id/btn_back"
-        app:layout_constraintTop_toTopOf="@id/btn_back"
-        tools:text="Dead Pool" />
+        app:layout_constraintTop_toTopOf="@id/btn_back" />
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.core.widget.NestedScrollView
         android:id="@+id/scroll_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="@dimen/_6sdp"
-        app:layout_constraintDimensionRatio="1:1.2"
+        app:layout_constraintBottom_toTopOf="@id/price_board"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/btn_back">
 
-        <com.pbl6.pbl6_cinestech.ui.seatbooking.CinemaSeatView
-            android:id="@+id/seat_view"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_8dp"
+                android:layout_marginTop="@dimen/_12dp"
+                android:fontFamily="@font/baloo2_semibold"
+                app:layout_constraintTop_toTopOf="parent"
+                android:text="@string/text_refreshments"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_14ssp"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <TextView
+                android:id="@+id/description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_8dp"
+                android:fontFamily="@font/baloo2_semibold"
+                app:layout_constraintTop_toBottomOf="@id/title"
+                android:text="@string/text_crunchy_popcorn_refreshing_drink_enjoy"
+                android:textColor="@color/color_description"
+                android:textSize="@dimen/_10ssp"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:listitem="@layout/item_refreshments"
+                android:layout_marginTop="@dimen/_4dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/description" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </androidx.core.widget.NestedScrollView>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/price_board"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="@color/color_background"
