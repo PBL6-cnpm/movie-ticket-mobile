@@ -1,6 +1,8 @@
 package com.pbl6.pbl6_cinestech.ui.refreshments
 
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.asLiveData
@@ -20,10 +22,21 @@ class RefreshmentsViewModel(
         super.onCreate(owner)
         getAllRefreshments()
     }
+    private val _price: MutableLiveData<Int> = MutableLiveData(0)
+    val price : LiveData<Int> get() = _price
+    fun setPrice(value: Int){
+        _price.value = value
+    }
+    fun add(price: Int){
+        _price.value = _price.value?.plus(price)
+    }
+    fun minus(price: Int){
+        _price.value = _price.value?.minus(price)
+    }
 
     private val _allRefreshmentsResult = MutableStateFlow<Response<ItemWrapper<RefreshmentsResponse>>?>(null)
     val allRefreshmentsResult: MutableStateFlow<Response<ItemWrapper<RefreshmentsResponse>>?> = _allRefreshmentsResult
-    val allRefreshmentsResultLiveData = _allRefreshmentsResult.asLiveData()
+    val allRefreshmentsResultLiveData = allRefreshmentsResult.asLiveData()
     fun getAllRefreshments(){
         viewModelScope.launch {
             try {

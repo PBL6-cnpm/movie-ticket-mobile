@@ -63,4 +63,9 @@
         android:name="com.pbl6.pbl6_cinestech.ui.seatbooking.SeatBookingFragment"
         android:label="fragment_seat_booking"
         tools:layout="@layout/fragment_seat_booking" />
+    <fragment
+        android:id="@+id/refreshmentsFragment"
+        android:name="com.pbl6.pbl6_cinestech.ui.refreshments.RefreshmentsFragment"
+        android:label="fragment_refreshments"
+        tools:layout="@layout/fragment_refreshments" />
 </navigation>

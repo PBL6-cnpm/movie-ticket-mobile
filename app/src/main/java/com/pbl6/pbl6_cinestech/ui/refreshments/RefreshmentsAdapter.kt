@@ -28,10 +28,11 @@ class RefreshmentsAdapter: BaseRecyclerViewAdapter<RefreshmentsResponse, ItemRef
         position: Int
     ) {
         binding.btnAdd.singleClick {
-            handleAdd?.invoke()
+            handleAdd?.invoke(item, position)
         }
         binding.btnMinus.singleClick {
-            handleMinus?.invoke()
+            if (listRefreshmentsOption.find { it.refreshmentId == item.id } == null) return@singleClick
+            handleMinus?.invoke(item, position)
         }
         binding.imgRefreshments.loadImageSketch(item.picture)
         binding.name.text = item.name
@@ -39,9 +40,9 @@ class RefreshmentsAdapter: BaseRecyclerViewAdapter<RefreshmentsResponse, ItemRef
         binding.quantity.text = (listRefreshmentsOption.firstOrNull { it.refreshmentId == item.id }?.quantity ?: 0).toString()
     }
 
-    private var handleAdd: (()-> Unit)? = null
-    private var handleMinus: (()-> Unit)? = null
-    fun setOnClick(handleAdd: () -> Unit, handleMinus: () -> Unit){
+    private var handleAdd: ((item: RefreshmentsResponse, position: Int)-> Unit)? = null
+    private var handleMinus: ((item: RefreshmentsResponse, position: Int)-> Unit)? = null
+    fun setOnClick(handleAdd: (item: RefreshmentsResponse, position: Int) -> Unit, handleMinus: (item: RefreshmentsResponse, position: Int) -> Unit){
         this.handleAdd = handleAdd
         this.handleMinus = handleMinus
     }

@@ -64,4 +64,13 @@
     <string name="text_combo_popcorn_and_drink">Combo – Popcorn and Drink</string>
     <string name="text_crunchy_popcorn_refreshing_drink_enjoy">Crunchy popcorn, refreshing drink – Enjoy!</string>
     <string name="text_refreshments">Refreshments</string>
+    <string name="text_movie_tickets">Movie tickets</string>
+    <string name="text_total">Total</string>
+    <string name="text_payment_information">Payment Information</string>
+    <string name="text_booking_information">Booking information</string>
+    <string name="text_time">Time:</string>
+    <string name="text_showtime">Showtime:</string>
+    <string name="text_format">Format:</string>
+    <string name="text_screening_room">Screening room:</string>
+    <string name="text_seat_number">Seat number:</string>
 </resources>

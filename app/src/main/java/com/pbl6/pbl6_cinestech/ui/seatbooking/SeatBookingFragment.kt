@@ -1,6 +1,7 @@
 package com.pbl6.pbl6_cinestech.ui.seatbooking
 
 import android.os.Build
+import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.annotation.RequiresApi
@@ -12,6 +13,7 @@ import com.pbl6.pbl6_cinestech.data.repository.RepositoryProvider
 import com.pbl6.pbl6_cinestech.databinding.FragmentSeatBookingBinding
 import com.pbl6.pbl6_cinestech.ui.main.MainViewModel
 import hoang.dqm.codebase.base.activity.BaseFragment
+import hoang.dqm.codebase.base.activity.navigate
 import hoang.dqm.codebase.utils.loadImageSketch
 import hoang.dqm.codebase.utils.singleClick
 import java.text.SimpleDateFormat
@@ -87,6 +89,12 @@ class SeatBookingFragment : BaseFragment<FragmentSeatBookingBinding, SeatBooking
                     getString(R.string.text_please_make_sure_to_select_at_least_one_seat), Toast.LENGTH_SHORT).show()
                 return@singleClick
             }
+            binding.seatView.getSelectedSeats().map { it-> it.id }
+            val bundle = Bundle().apply {
+                putInt("ticketsPrice", viewModel.price.value!!)
+                putString("idShowTime", idShowTime)
+            }
+            navigate(R.id.refreshmentsFragment, bundle)
         }
     }
 

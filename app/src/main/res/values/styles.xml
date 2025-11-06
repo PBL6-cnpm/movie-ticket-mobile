@@ -16,4 +16,9 @@
         <item name="cornerSize">10%</item>
     </style>
 
+    <style name="ImgMovie">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">20%</item>
+    </style>
+
 </resources>

@@ -72,6 +72,7 @@
                 app:layout_constraintStart_toStartOf="parent" />
 
             <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_refreshments"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 tools:listitem="@layout/item_refreshments"
@@ -94,67 +95,37 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/img_movie"
+        <TextView
+            android:id="@+id/tv_ticket_price"
             android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/img_movie_test"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintDimensionRatio="1:1"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_4dp"
+            android:layout_marginTop="@dimen/_4dp"
+            android:ellipsize="end"
+            android:fontFamily="@font/baloo2_semibold"
+            android:maxLines="1"
+            android:text="@string/text_movie_tickets"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_13ssp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.04"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.05"
-            app:layout_constraintWidth_percent="0.18"
-            app:shapeAppearanceOverlay="@style/CircleImageView" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/tv_name_movie"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/_4dp"
-            android:ellipsize="end"
-            android:fontFamily="@font/baloo2_semibold"
-            android:maxLines="1"
-            android:textColor="@color/white"
-            android:textSize="@dimen/_12ssp"
-            app:layout_constraintEnd_toStartOf="@id/btn_change_show_time"
-            app:layout_constraintStart_toEndOf="@id/img_movie"
-            app:layout_constraintTop_toTopOf="@id/img_movie"
-            tools:text="Phim hay" />
-
-        <TextView
-            android:id="@+id/btn_change_show_time"
+            android:id="@+id/ticket_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/_4dp"
+            android:layout_marginTop="@dimen/_4dp"
             android:fontFamily="@font/baloo2_semibold"
-            android:text="@string/text_reschedule"
-            android:textColor="#FE7E32"
-            android:textSize="@dimen/_10ssp"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_13ssp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.98"
-            app:layout_constraintStart_toEndOf="@id/img_movie"
-            app:layout_constraintTop_toTopOf="@id/img_movie" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="500.000d" />
 
         <TextView
-            android:id="@+id/tv_description"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/_4dp"
-            android:ellipsize="end"
-            android:fontFamily="@font/baloo2_semibold"
-            android:maxLines="1"
-            android:textColor="@color/color_description"
-            android:textSize="@dimen/_11ssp"
-            app:layout_constraintEnd_toEndOf="@id/btn_change_show_time"
-            app:layout_constraintStart_toEndOf="@id/img_movie"
-            app:layout_constraintTop_toBottomOf="@id/tv_name_movie"
-            tools:text="Phim hay" />
-
-        <TextView
+            android:id="@+id/tv_refreshments_price"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/_4dp"
@@ -162,15 +133,44 @@
             android:ellipsize="end"
             android:fontFamily="@font/baloo2_semibold"
             android:maxLines="1"
-            android:text="@string/text_price"
+            android:text="@string/text_refreshments"
             android:textColor="@color/white"
-            android:textSize="@dimen/_14ssp"
-            app:layout_constraintEnd_toEndOf="@id/btn_change_show_time"
-            app:layout_constraintStart_toStartOf="@id/img_movie"
-            app:layout_constraintTop_toBottomOf="@id/img_movie" />
+            android:textSize="@dimen/_13ssp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_ticket_price" />
 
         <TextView
-            android:id="@+id/tv_price"
+            android:id="@+id/refreshments_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_4dp"
+            android:layout_marginTop="@dimen/_4dp"
+            android:fontFamily="@font/baloo2_semibold"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_13ssp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_ticket_price"
+            tools:text="500.000d" />
+
+        <TextView
+            android:id="@+id/tv_total"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_4dp"
+            android:layout_marginTop="@dimen/_4dp"
+            android:ellipsize="end"
+            android:fontFamily="@font/baloo2_semibold"
+            android:maxLines="1"
+            android:text="@string/text_total"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_14ssp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_refreshments_price" />
+
+        <TextView
+            android:id="@+id/total"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/_4dp"
@@ -178,8 +178,8 @@
             android:fontFamily="@font/baloo2_semibold"
             android:textColor="@color/white"
             android:textSize="@dimen/_14ssp"
-            app:layout_constraintEnd_toEndOf="@id/btn_change_show_time"
-            app:layout_constraintTop_toBottomOf="@id/img_movie"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_refreshments_price"
             tools:text="500.000d" />
 
         <ImageView
@@ -190,9 +190,9 @@
             android:layout_marginBottom="@dimen/_8dp"
             android:src="@drawable/shape_bg_enter"
             app:layout_constraintDimensionRatio="376:56"
-            app:layout_constraintEnd_toEndOf="@id/btn_change_show_time"
-            app:layout_constraintStart_toStartOf="@id/img_movie"
-            app:layout_constraintTop_toBottomOf="@id/tv_price" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_total" />
 
         <TextView
             android:layout_width="wrap_content"
