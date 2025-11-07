@@ -21,6 +21,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "PBL6_Cinestech"
+rootProject.name = "Music Rhythm Game"
 include(":app")
 include(":codeBase")

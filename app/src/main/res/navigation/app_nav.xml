@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/app_nav"
-    app:startDestination="@id/forgotPasswordFragment">
+    app:startDestination="@id/homeFragment">
 
     <fragment
         android:id="@+id/forgotPasswordFragment"
@@ -68,4 +68,14 @@
         android:name="com.pbl6.pbl6_cinestech.ui.refreshments.RefreshmentsFragment"
         android:label="fragment_refreshments"
         tools:layout="@layout/fragment_refreshments" />
+    <fragment
+        android:id="@+id/paymentInformationFragment"
+        android:name="com.pbl6.pbl6_cinestech.ui.payment_information.PaymentInformationFragment"
+        android:label="fragment_payment_information"
+        tools:layout="@layout/fragment_payment_information" />
+    <fragment
+        android:id="@+id/paymentFragment"
+        android:name="com.pbl6.pbl6_cinestech.ui.payment.PaymentFragment"
+        android:label="fragment_payment"
+        tools:layout="@layout/fragment_payment" />
 </navigation>

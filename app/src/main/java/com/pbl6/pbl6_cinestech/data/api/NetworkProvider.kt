@@ -68,4 +68,8 @@ object NetworkProvider {
     val refreshmentsApiService: RefreshmentApiService by lazy {
         retrofit.create(RefreshmentApiService::class.java)
     }
+
+    val bookingApiService: BookingApiService by lazy {
+        retrofit.create(BookingApiService::class.java)
+    }
 }

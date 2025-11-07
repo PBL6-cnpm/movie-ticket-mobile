@@ -1,6 +1,6 @@
 package com.pbl6.pbl6_cinestech.ui.refreshments
 
-import com.pbl6.pbl6_cinestech.data.model.request.RefreshmentsOption
+import com.pbl6.pbl6_cinestech.data.model.request.Refreshments
 import com.pbl6.pbl6_cinestech.data.model.response.RefreshmentsResponse
 import com.pbl6.pbl6_cinestech.databinding.ItemRefreshmentsBinding
 import hoang.dqm.codebase.base.adapter.BaseRecyclerViewAdapter
@@ -8,11 +8,11 @@ import hoang.dqm.codebase.utils.loadImageSketch
 import hoang.dqm.codebase.utils.singleClick
 
 class RefreshmentsAdapter: BaseRecyclerViewAdapter<RefreshmentsResponse, ItemRefreshmentsBinding>() {
-    private var listRefreshmentsOption: MutableList<RefreshmentsOption> = mutableListOf()
+    private var listRefreshmentsOption: MutableList<Refreshments> = mutableListOf()
     fun addRefreshment(id: String, position: Int) {
         listRefreshmentsOption.find { it.refreshmentId == id }?.let {
             it.quantity += 1
-        }?: listRefreshmentsOption.add(RefreshmentsOption(id,1))
+        }?: listRefreshmentsOption.add(Refreshments(id,1))
         notifyItemChanged(position)
     }
     fun minusRefreshment(id: String, position: Int) {
@@ -21,6 +21,10 @@ class RefreshmentsAdapter: BaseRecyclerViewAdapter<RefreshmentsResponse, ItemRef
             else listRefreshmentsOption.remove(item)
         }
         notifyItemChanged(position)
+    }
+
+    fun getListRefreshments(): MutableList<Refreshments> {
+        return listRefreshmentsOption
     }
     override fun bindData(
         binding: ItemRefreshmentsBinding,

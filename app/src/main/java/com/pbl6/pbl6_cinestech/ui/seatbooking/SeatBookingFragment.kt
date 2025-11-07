@@ -8,6 +8,7 @@ import androidx.annotation.RequiresApi
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import com.pbl6.pbl6_cinestech.R
+import com.pbl6.pbl6_cinestech.data.model.request.HoldingRequest
 import com.pbl6.pbl6_cinestech.data.model.response.Seat
 import com.pbl6.pbl6_cinestech.data.repository.RepositoryProvider
 import com.pbl6.pbl6_cinestech.databinding.FragmentSeatBookingBinding
@@ -27,7 +28,8 @@ class SeatBookingFragment : BaseFragment<FragmentSeatBookingBinding, SeatBooking
 
     override val viewModelFactory: ViewModelProvider.Factory
         get() = SeatBookingViewModel.SeatBookingViewModelFactory(
-            RepositoryProvider.seatRepository
+            RepositoryProvider.seatRepository,
+            RepositoryProvider.bookingRepository
         )
     private val idShowTime by lazy {
         arguments?.getString("idShowTime") ?: ""
@@ -63,7 +65,7 @@ class SeatBookingFragment : BaseFragment<FragmentSeatBookingBinding, SeatBooking
                     value.data.seatLayout.rows,
                     value.data.seatLayout.cols,
                     value.data.seatLayout.seats,
-                    value.data.seatLayout.occupiedSeats
+                    value.data.seatLayout.occupiedSeats.map { id-> id.id }
                 )
                 binding.seatView.setSeatSelectionListener(object: CinemaSeatView.OnSeatSelectionListener{
                     override fun onSeatSelected(seat: Seat) {
@@ -80,6 +82,24 @@ class SeatBookingFragment : BaseFragment<FragmentSeatBookingBinding, SeatBooking
         viewModel.price.observe(viewLifecycleOwner){ value ->
             binding.tvPrice.text = formatVND(value.toLong())
         }
+
+        viewModel.holdSeatResultLiveData.observe(viewLifecycleOwner) { value ->
+            Log.d("check hold", "setUpObserver: $value")
+            if (value?.success == true){
+                if (value.data == null) return@observe
+                val seatIds = binding.seatView.getSelectedSeats().map { it-> it.id }
+                val bundle = Bundle().apply {
+                    putInt("ticketsPrice", viewModel.price.value!!)
+                    putString("idShowTime", idShowTime)
+                    putStringArrayList("seatIds", ArrayList(seatIds))
+                    putString("bookingId", value.data.bookingId)
+                }
+                navigate(R.id.refreshmentsFragment, bundle)
+            } else if (value?.success == false) {
+                Toast.makeText(requireContext(),
+                    getString(R.string.text_something_went_wrong_please_try_again), Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
     override fun initListener() {
@@ -89,12 +109,8 @@ class SeatBookingFragment : BaseFragment<FragmentSeatBookingBinding, SeatBooking
                     getString(R.string.text_please_make_sure_to_select_at_least_one_seat), Toast.LENGTH_SHORT).show()
                 return@singleClick
             }
-            binding.seatView.getSelectedSeats().map { it-> it.id }
-            val bundle = Bundle().apply {
-                putInt("ticketsPrice", viewModel.price.value!!)
-                putString("idShowTime", idShowTime)
-            }
-            navigate(R.id.refreshmentsFragment, bundle)
+            val seatIds = binding.seatView.getSelectedSeats().map { it-> it.id }
+            viewModel.holdSeat(HoldingRequest(idShowTime, seatIds))
         }
     }
 

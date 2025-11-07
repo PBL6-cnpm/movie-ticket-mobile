@@ -73,4 +73,6 @@
     <string name="text_format">Format:</string>
     <string name="text_screening_room">Screening room:</string>
     <string name="text_seat_number">Seat number:</string>
+    <string name="text_recipient_information">Recipient Information</string>
+    <string name="text_something_went_wrong_please_try_again">Something went wrong. Please try again.</string>
 </resources>

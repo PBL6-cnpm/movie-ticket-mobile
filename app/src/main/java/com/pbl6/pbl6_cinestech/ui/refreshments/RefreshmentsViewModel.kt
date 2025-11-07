@@ -1,5 +1,6 @@
 package com.pbl6.pbl6_cinestech.ui.refreshments
 
+import android.util.Log
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -7,16 +8,21 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
+import com.pbl6.pbl6_cinestech.data.model.request.ApplyRefreshmentsRequest
+import com.pbl6.pbl6_cinestech.data.model.request.HoldingRequest
+import com.pbl6.pbl6_cinestech.data.model.response.BookingResponse
 import com.pbl6.pbl6_cinestech.data.model.response.ItemWrapper
 import com.pbl6.pbl6_cinestech.data.model.response.RefreshmentsResponse
 import com.pbl6.pbl6_cinestech.data.model.response.Response
+import com.pbl6.pbl6_cinestech.data.repository.BookingRepository
 import com.pbl6.pbl6_cinestech.data.repository.RefreshmentsRepository
 import hoang.dqm.codebase.base.viewmodel.BaseViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
 class RefreshmentsViewModel(
-    private val refreshmentsRepository: RefreshmentsRepository
+    private val refreshmentsRepository: RefreshmentsRepository,
+    private val bookingRepository: BookingRepository
 ): BaseViewModel() {
     override fun onCreate(owner: LifecycleOwner) {
         super.onCreate(owner)
@@ -48,12 +54,29 @@ class RefreshmentsViewModel(
         }
     }
 
+    private val _applyRefreshmentsResult = MutableStateFlow<Response<BookingResponse>?>(null)
+    val applyRefreshmentsResult: MutableStateFlow<Response<BookingResponse>?> = _applyRefreshmentsResult
+    val applyRefreshmentsResultLiveData = applyRefreshmentsResult.asLiveData()
+
+    fun applyRefreshments(bookingRequest: ApplyRefreshmentsRequest){
+        viewModelScope.launch {
+            try {
+                val response = bookingRepository.applyRefreshments(bookingRequest)
+                _applyRefreshmentsResult.value = response
+            }catch (e: Exception){
+                Log.e("check booking", "hold error: ${e.message}", e)
+
+            }
+        }
+    }
+
     class RefreshmentsViewModelFactory(
-        private val refreshmentsRepository: RefreshmentsRepository
+        private val refreshmentsRepository: RefreshmentsRepository,
+        private val bookingRepository: BookingRepository
     ): ViewModelProvider.Factory{
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             if (modelClass.isAssignableFrom(RefreshmentsViewModel::class.java)) {
-                return RefreshmentsViewModel(refreshmentsRepository) as T
+                return RefreshmentsViewModel(refreshmentsRepository, bookingRepository) as T
             }
             throw IllegalArgumentException("Unknown ViewModel class")
         }

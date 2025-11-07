@@ -28,4 +28,8 @@ object RepositoryProvider {
         RefreshmentsRepository(NetworkProvider.refreshmentsApiService)
     }
 
+    val bookingRepository: BookingRepository by lazy {
+        BookingRepository(NetworkProvider.bookingApiService)
+    }
+
 }
