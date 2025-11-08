@@ -4,8 +4,12 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.pbl6.pbl6_cinestech.data.model.response.CinemaShowTime
 import com.pbl6.pbl6_cinestech.databinding.ItemCinemaShowtimeBinding
 import hoang.dqm.codebase.base.adapter.BaseRecyclerViewAdapter
+import hoang.dqm.codebase.utils.singleClick
 
-class CinemaShowTimeAdapter(val duration: Int,val listener: (idShowTime: String, time: String) -> Unit ): BaseRecyclerViewAdapter<CinemaShowTime, ItemCinemaShowtimeBinding>() {
+class CinemaShowTimeAdapter(
+    val duration: Int,
+    val listener: (idShowTime: String, time: String) -> Unit
+) : BaseRecyclerViewAdapter<CinemaShowTime, ItemCinemaShowtimeBinding>() {
     override fun bindData(
         binding: ItemCinemaShowtimeBinding,
         item: CinemaShowTime,
@@ -15,7 +19,7 @@ class CinemaShowTimeAdapter(val duration: Int,val listener: (idShowTime: String,
         binding.tvDescription.text = "Favourite"
         binding.distance.text = "5km"
         binding.tvAddress.text = item.branch.address
-        val showTimeAdapter =  ShowTimeAdapter(item.showTime.times, duration)
+        val showTimeAdapter = ShowTimeAdapter(item.showTime.times, duration)
         binding.rvShowTime.adapter = showTimeAdapter
         showTimeAdapter.setOnClickItemRecyclerView { _, position ->
             listener.invoke(item.showTime.times[position].id, item.showTime.times[position].time)
@@ -23,12 +27,17 @@ class CinemaShowTimeAdapter(val duration: Int,val listener: (idShowTime: String,
         binding.rvShowTime.layoutManager = GridLayoutManager(context, 3)
         binding.rvShowTime.setHasFixedSize(true)
         binding.rvShowTime.isNestedScrollingEnabled = false
-
+        binding.openMap.singleClick {
+            openMap?.invoke(item.branch.address)
+        }
     }
 
-    fun setOnClickItem(listener: (position: Int) -> Unit) {
+    private var openMap: ((String)-> Unit)? = null
+
+    fun setOnClickItem(listener: (position: Int) -> Unit, openMap: (String)-> Unit) {
         setOnClickItemRecyclerView { pattern, position ->
             listener.invoke(position)
         }
+        this.openMap = openMap
     }
 }
