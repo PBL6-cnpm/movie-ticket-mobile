@@ -26,7 +26,7 @@ class ShowTimeAdapter(listTime: List<Time>,val duration: Int): BaseRecyclerViewA
             append("~")
             append(getEndTime(item.time, duration))
         }
-        binding.slot.text = "17/21 left"
+        binding.slot.text = "${item.availableSeats}/${item.totalSeats} left"
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
