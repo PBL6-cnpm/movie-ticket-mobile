@@ -1,6 +1,5 @@
 package com.pbl6.pbl6_cinestech.ui.seatbooking
 
-import android.animation.Animator
 import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.Canvas
@@ -23,7 +22,6 @@ import android.view.animation.AccelerateDecelerateInterpolator
 import androidx.core.graphics.withMatrix
 import com.pbl6.pbl6_cinestech.data.model.response.Seat
 import kotlin.math.abs
-import kotlin.math.log
 import kotlin.math.max
 import kotlin.math.min
 
@@ -111,9 +109,30 @@ class CinemaSeatView @JvmOverloads constructor(
         color = Color.parseColor("#FFD700")
     }
 
+    // Occupied seat paints - Improved design
     private val occupiedPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         color = Color.parseColor("#95A5A6")
         style = Paint.Style.FILL
+    }
+
+    private val occupiedStrokePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        style = Paint.Style.STROKE
+        strokeWidth = 4f
+        color = Color.parseColor("#7F8C8D")
+    }
+
+    private val occupiedPatternPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        color = Color.parseColor("#7F8C8D")
+        style = Paint.Style.STROKE
+        strokeWidth = 2f
+    }
+
+    private val occupiedIconPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        color = Color.parseColor("#FFFFFF")
+        style = Paint.Style.FILL
+        textSize = 32f
+        textAlign = Paint.Align.CENTER
+        typeface = Typeface.DEFAULT_BOLD
     }
 
     private val rowLabelPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
@@ -173,7 +192,7 @@ class CinemaSeatView @JvmOverloads constructor(
 
         // Mark occupied seats
         seats.forEach { seat ->
-            seat.isOccupied = occupiedSeats.contains(seat.name)
+            seat.isOccupied = occupiedSeats.contains(seat.id)
         }
 
         // Calculate grid dimensions
@@ -548,28 +567,8 @@ class CinemaSeatView @JvmOverloads constructor(
         val rect = RectF(x, y, x + seatSize, y + seatSize)
 
         if (seat.isOccupied) {
-            canvas.drawRoundRect(rect, 12f, 12f, occupiedPaint)
-
-            val xPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-                color = Color.parseColor("#7F8C8D")
-                strokeWidth = 4f
-                style = Paint.Style.STROKE
-            }
-            val padding = seatSize * 0.25f
-            canvas.drawLine(
-                x + padding,
-                y + padding,
-                x + seatSize - padding,
-                y + seatSize - padding,
-                xPaint
-            )
-            canvas.drawLine(
-                x + seatSize - padding,
-                y + padding,
-                x + padding,
-                y + seatSize - padding,
-                xPaint
-            )
+            // Draw occupied seat with improved design
+            drawOccupiedSeat(canvas, rect, x, y)
         } else {
             seatPaint.color = Color.parseColor(seat.type.color)
             canvas.drawRoundRect(rect, 12f, 12f, seatPaint)
@@ -611,6 +610,81 @@ class CinemaSeatView @JvmOverloads constructor(
                 legPaint
             )
         }
+    }
+
+    private fun drawOccupiedSeat(canvas: Canvas, rect: RectF, x: Float, y: Float) {
+        // Draw main seat body with gradient
+        val gradient = LinearGradient(
+            rect.left, rect.top,
+            rect.left, rect.bottom,
+            Color.parseColor("#95A5A6"),
+            Color.parseColor("#7F8C8D"),
+            Shader.TileMode.CLAMP
+        )
+        occupiedPaint.shader = gradient
+        canvas.drawRoundRect(rect, 12f, 12f, occupiedPaint)
+        occupiedPaint.shader = null
+
+        // Draw border
+        canvas.drawRoundRect(rect, 12f, 12f, occupiedStrokePaint)
+
+        // Draw diagonal stripes pattern
+//        val stripeSpacing = seatSize / 5
+//        for (i in 0..8) {
+//            val startX = x + (i * stripeSpacing) - seatSize
+//            val startY = y
+//            val endX = x + (i * stripeSpacing)
+//            val endY = y + seatSize
+//            canvas.drawLine(startX, startY, endX, endY, occupiedPatternPaint)
+//        }
+
+        // Draw lock icon in the center
+        val cx = x + seatSize / 2
+        val cy = y + seatSize / 2
+        val lockSize = seatSize * 0.35f
+
+        // Lock body
+        val lockBodyRect = RectF(
+            cx - lockSize / 3,
+            cy - lockSize / 6,
+            cx + lockSize / 3,
+            cy + lockSize / 2.5f
+        )
+        val lockBodyPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+            color = Color.parseColor("#BDC3C7")
+            style = Paint.Style.FILL
+        }
+        canvas.drawRoundRect(lockBodyRect, 8f, 8f, lockBodyPaint)
+
+        // Lock shackle (arc)
+        val shacklePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+            color = Color.parseColor("#BDC3C7")
+            style = Paint.Style.STROKE
+            strokeWidth = 5f
+            strokeCap = Paint.Cap.ROUND
+        }
+        val shackleRect = RectF(
+            cx - lockSize / 4,
+            cy - lockSize / 2,
+            cx + lockSize / 4,
+            cy
+        )
+        canvas.drawArc(shackleRect, 180f, 180f, false, shacklePaint)
+
+        // Keyhole
+        val keyholePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+            color = Color.parseColor("#7F8C8D")
+            style = Paint.Style.FILL
+        }
+        canvas.drawCircle(cx, cy + lockSize / 8, lockSize / 10, keyholePaint)
+
+        val keyholeSlotRect = RectF(
+            cx - lockSize / 20,
+            cy + lockSize / 8,
+            cx + lockSize / 20,
+            cy + lockSize / 3.5f
+        )
+        canvas.drawRect(keyholeSlotRect, keyholePaint)
     }
 
     fun getSelectedSeats(): List<Seat> {
