@@ -3,6 +3,7 @@ package com.pbl6.pbl6_cinestech.ui.seatbooking
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.activityViewModels
@@ -47,6 +48,8 @@ class SeatBookingFragment : BaseFragment<FragmentSeatBookingBinding, SeatBooking
         arguments?.getString("timeStart")?: ""
     }
 
+    private var timeText: String = ""
+
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun initView() {
@@ -88,10 +91,14 @@ class SeatBookingFragment : BaseFragment<FragmentSeatBookingBinding, SeatBooking
             if (value?.success == true){
                 if (value.data == null) return@observe
                 val seatIds = binding.seatView.getSelectedSeats().map { it-> it.id }
+                val seatNumbers = binding.seatView.getSelectedSeats().map { it-> it.name }
                 val bundle = Bundle().apply {
                     putInt("ticketsPrice", viewModel.price.value!!)
                     putString("idShowTime", idShowTime)
                     putStringArrayList("seatIds", ArrayList(seatIds))
+                    putStringArrayList("seatNumbers", ArrayList(seatNumbers))
+                    putString("bookingId", value.data.bookingId)
+                    putString("timeText", timeText)
                     putString("bookingId", value.data.bookingId)
                 }
                 navigate(R.id.refreshmentsFragment, bundle)
@@ -103,7 +110,7 @@ class SeatBookingFragment : BaseFragment<FragmentSeatBookingBinding, SeatBooking
     }
 
     override fun initListener() {
-        binding.btnNext.singleClick { 
+        binding.btnNext.singleClick {
             if (viewModel.price.value == 0){
                 Toast.makeText(requireContext(),
                     getString(R.string.text_please_make_sure_to_select_at_least_one_seat), Toast.LENGTH_SHORT).show()
@@ -128,7 +135,7 @@ class SeatBookingFragment : BaseFragment<FragmentSeatBookingBinding, SeatBooking
         val timeMovieStart = convertTo24Hour(timeStart)
         val timeEnd = getEndTime(timeStart, movie.duration)
         binding.tvDescription.text = timeMovieStart+"~"+timeEnd+" | "+time+" | "+"2D"
-
+        timeText = "$timeMovieStart~$timeEnd\n$time"
     }
 
     fun getDayMonthYearWithWeekday(isoString: String): String {
