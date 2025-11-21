@@ -9,10 +9,10 @@ import hoang.dqm.codebase.utils.singleClick
 
 class RefreshmentsAdapter: BaseRecyclerViewAdapter<RefreshmentsResponse, ItemRefreshmentsBinding>() {
     private var listRefreshmentsOption: MutableList<Refreshments> = mutableListOf()
-    fun addRefreshment(id: String, position: Int) {
-        listRefreshmentsOption.find { it.refreshmentId == id }?.let {
+    fun addRefreshment(item: RefreshmentsResponse, position: Int) {
+        listRefreshmentsOption.find { it.refreshmentId == item.id }?.let {
             it.quantity += 1
-        }?: listRefreshmentsOption.add(Refreshments(id,1))
+        }?: listRefreshmentsOption.add(Refreshments(item.id,1, item.price, item.name, item.picture))
         notifyItemChanged(position)
     }
     fun minusRefreshment(id: String, position: Int) {

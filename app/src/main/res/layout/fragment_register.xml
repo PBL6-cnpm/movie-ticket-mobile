@@ -129,7 +129,6 @@
         android:layout_height="wrap_content"
         android:background="@drawable/edt_border"
         android:drawableStart="@drawable/icon_password"
-        android:drawableEnd="@drawable/icon_invisible"
         android:drawablePadding="@dimen/_8dp"
         android:drawableTint="#808080"
         android:fontFamily="@font/baloo2_semibold"
@@ -143,6 +142,17 @@
         app:layout_constraintEnd_toEndOf="@id/line_end"
         app:layout_constraintStart_toStartOf="@id/line_start"
         app:layout_constraintTop_toBottomOf="@id/tv_password" />
+
+    <ImageView
+        android:id="@+id/img_toggle_visible_password"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintEnd_toEndOf="@id/edt_password"
+        app:layout_constraintTop_toTopOf="@id/edt_password"
+        app:layout_constraintBottom_toBottomOf="@id/edt_password"
+        app:layout_constraintDimensionRatio="1:1"
+        android:padding="@dimen/_12dp"
+        android:src="@drawable/icon_invisible" />
 
     <TextView
         android:id="@+id/tv_confirm_password"
@@ -162,7 +172,6 @@
         android:layout_height="wrap_content"
         android:background="@drawable/edt_border"
         android:drawableStart="@drawable/icon_password"
-        android:drawableEnd="@drawable/icon_invisible"
         android:drawablePadding="@dimen/_8dp"
         android:drawableTint="#808080"
         android:fontFamily="@font/baloo2_semibold"
@@ -176,6 +185,17 @@
         app:layout_constraintEnd_toEndOf="@id/line_end"
         app:layout_constraintStart_toStartOf="@id/line_start"
         app:layout_constraintTop_toBottomOf="@id/tv_confirm_password" />
+
+    <ImageView
+        android:id="@+id/img_toggle_confirm_visible_password"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintEnd_toEndOf="@id/edt_confirm_password"
+        app:layout_constraintTop_toTopOf="@id/edt_confirm_password"
+        app:layout_constraintBottom_toBottomOf="@id/edt_confirm_password"
+        app:layout_constraintDimensionRatio="1:1"
+        android:padding="@dimen/_12dp"
+        android:src="@drawable/icon_invisible" />
 
 
     <ImageView

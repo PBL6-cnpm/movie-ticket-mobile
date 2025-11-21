@@ -17,6 +17,7 @@ import com.pbl6.pbl6_cinestech.data.model.response.Response
 import com.pbl6.pbl6_cinestech.data.repository.BookingRepository
 import com.pbl6.pbl6_cinestech.data.repository.RefreshmentsRepository
 import hoang.dqm.codebase.base.viewmodel.BaseViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
@@ -54,15 +55,13 @@ class RefreshmentsViewModel(
         }
     }
 
-    private val _applyRefreshmentsResult = MutableStateFlow<Response<BookingResponse>?>(null)
-    val applyRefreshmentsResult: MutableStateFlow<Response<BookingResponse>?> = _applyRefreshmentsResult
-    val applyRefreshmentsResultLiveData = applyRefreshmentsResult.asLiveData()
-
+    private val _applyRefreshmentsEvent  = MutableSharedFlow<Response<BookingResponse>>()
+    val applyRefreshmentsEvent = _applyRefreshmentsEvent
     fun applyRefreshments(bookingRequest: ApplyRefreshmentsRequest){
         viewModelScope.launch {
             try {
                 val response = bookingRepository.applyRefreshments(bookingRequest)
-                _applyRefreshmentsResult.value = response
+                _applyRefreshmentsEvent.emit(response)
             }catch (e: Exception){
                 Log.e("check booking", "hold error: ${e.message}", e)
 
