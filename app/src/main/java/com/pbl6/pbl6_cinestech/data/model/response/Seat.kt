@@ -5,5 +5,6 @@ data class Seat(
     val name: String,
     val type: SeatType,
     var isOccupied: Boolean = false,
-    var isSelected: Boolean = false
+    var isSelected: Boolean = false,
+    var room: RoomResponse
 )

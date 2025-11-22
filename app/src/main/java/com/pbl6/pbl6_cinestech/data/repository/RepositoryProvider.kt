@@ -32,4 +32,13 @@ object RepositoryProvider {
         BookingRepository(NetworkProvider.bookingApiService)
     }
 
+    val paymentRepository: PaymentRepository by lazy {
+        PaymentRepository(NetworkProvider.paymentApiService)
+    }
+
+    val profileRepository: ProfileRepository by lazy {
+        ProfileRepository(NetworkProvider.profileApiService)
+    }
+
+
 }
