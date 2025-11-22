@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/topbar_1d273a"
+    tools:context=".ui.map.MapsFragment">
+
+    <ImageView
+        android:id="@+id/btn_back"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_margin="@dimen/_6sdp"
+        android:src="@drawable/ic_back"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth_percent="0.1" />
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_16sdp"
+        android:fontFamily="@font/baloo2_semibold"
+        android:text="@string/text_booking_history"
+        android:textColor="@color/white"
+        android:textSize="@dimen/_18ssp"
+        app:layout_constraintBottom_toBottomOf="@id/btn_back"
+        app:layout_constraintStart_toEndOf="@id/btn_back"
+        app:layout_constraintTop_toTopOf="@id/btn_back" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:background="@color/color_background"
+        android:layout_marginTop="@dimen/_12dp"
+        android:padding="@dimen/_12dp"
+        app:layout_constraintTop_toBottomOf="@id/title">
+
+
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/bg_map"
+            android:layout_width="0dp"
+            android:layout_height="200dp"
+            android:layout_margin="@dimen/_12dp"
+            android:layout_marginTop="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <FrameLayout
+                android:id="@+id/map_container"
+                android:layout_width="match_parent"
+                android:layout_height="200dp" />
+        </com.google.android.material.card.MaterialCardView>
+
+        <TextView
+            android:id="@+id/tt_address"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="@id/bg_map"
+            app:layout_constraintStart_toStartOf="@id/bg_map"
+            app:layout_constraintTop_toBottomOf="@id/bg_map"
+            android:layout_marginTop="@dimen/_4dp"
+            android:text="@string/text_address"
+            android:textColor="@color/white"
+            android:fontFamily="@font/baloo2_bold"
+            android:textSize="@dimen/_16ssp" />
+
+        <TextView
+            android:id="@+id/address"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="@id/bg_map"
+            app:layout_constraintStart_toStartOf="@id/bg_map"
+            app:layout_constraintTop_toBottomOf="@id/tt_address"
+            android:layout_marginTop="@dimen/_4dp"
+            android:text="245/26 Le Duan, Da Nang"
+            android:textColor="@color/white"
+            android:fontFamily="@font/baloo2_semibold"
+            android:textSize="@dimen/_16ssp" />
+        <!-- Ví dụ thêm 1 button bên dưới map -->
+        <ImageView
+            android:id="@+id/btn_open_map"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginBottom="@dimen/_8dp"
+            android:src="@drawable/shape_bg_enter"
+            app:layout_constraintDimensionRatio="376:120"
+            app:layout_constraintStart_toStartOf="@id/bg_map"
+            app:layout_constraintEnd_toEndOf="@id/bg_map"
+            app:layout_constraintTop_toBottomOf="@id/address"
+            android:layout_marginTop="@dimen/_12dp"/>
+
+        <ImageView
+            android:id="@+id/ic_map"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:src="@drawable/ic_map"
+            android:layout_marginTop="@dimen/_8dp"
+            app:layout_constraintDimensionRatio="92.3:132.3"
+            app:layout_constraintWidth_percent="0.1"
+            app:layout_constraintTop_toTopOf="@id/btn_open_map"
+            app:layout_constraintStart_toStartOf="@id/btn_open_map"
+            app:layout_constraintEnd_toEndOf="@id/btn_open_map" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/baloo2_semibold"
+            android:text="@string/text_navigate_with_google_maps"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_16ssp"
+            app:layout_constraintBottom_toBottomOf="@id/btn_open_map"
+            app:layout_constraintEnd_toEndOf="@id/btn_open_map"
+            app:layout_constraintStart_toStartOf="@id/btn_open_map"
+            app:layout_constraintTop_toBottomOf="@id/ic_map" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
