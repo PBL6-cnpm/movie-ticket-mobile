@@ -6,10 +6,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
+import com.pbl6.pbl6_cinestech.data.model.response.AccountResponse
 import com.pbl6.pbl6_cinestech.data.model.response.ItemWrapper
 import com.pbl6.pbl6_cinestech.data.model.response.MovieResponse
 import com.pbl6.pbl6_cinestech.data.model.response.Response
 import com.pbl6.pbl6_cinestech.data.model.response.ReviewResponse
+import com.pbl6.pbl6_cinestech.data.repository.AuthRepository
 import com.pbl6.pbl6_cinestech.data.repository.MovieRepository
 import com.pbl6.pbl6_cinestech.data.repository.ReviewRepository
 import hoang.dqm.codebase.base.viewmodel.BaseViewModel
@@ -18,7 +20,8 @@ import kotlinx.coroutines.launch
 
 class HomeViewModel(
     private val movieRepository: MovieRepository,
-    private val reviewRepository: ReviewRepository
+    private val reviewRepository: ReviewRepository,
+    private val authRepository: AuthRepository
 ) : BaseViewModel() {
 
 
@@ -73,14 +76,28 @@ class HomeViewModel(
             }
         }
     }
+    private val _accountResult = MutableStateFlow<Response<AccountResponse>?>(null)
+    val accountResult: MutableStateFlow<Response<AccountResponse>?> = _accountResult
+    val accountResultLiveData = accountResult.asLiveData()
+    fun getAccountResult(){
+        viewModelScope.launch {
+            try {
+                val response = authRepository.getAccount()
+                _accountResult.value = response
+            }catch (e:Exception){
+                Log.e("LoginViewModel", "Login error: ${e.message}", e)
+            }
+        }
+    }
 
     class HomeViewModelFactory(
         private val movieRepository: MovieRepository,
-        private val reviewRepository: ReviewRepository
+        private val reviewRepository: ReviewRepository,
+        private val authRepository: AuthRepository
     ) : ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             if (modelClass.isAssignableFrom(HomeViewModel::class.java)) {
-                return HomeViewModel(movieRepository, reviewRepository) as T
+                return HomeViewModel(movieRepository, reviewRepository, authRepository) as T
             }
             throw IllegalArgumentException("Unknown ViewModel class")
         }
