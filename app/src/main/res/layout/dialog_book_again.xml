@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/_12sdp"
+    android:background="@drawable/shape_tab_default"
+    android:elevation="@dimen/_16dp">
+
+    <ImageView
+        android:id="@+id/bg_dialog"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/shape_tab_default"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth_percent="1" />
+
+
+    <ImageView
+        android:id="@+id/ic_dialog"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_margin="@dimen/_24sdp"
+        android:src="@drawable/expired_booking"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.1"
+        app:layout_constraintWidth_percent="0.3" />
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/baloo2_bold"
+        android:gravity="center"
+        android:text="@string/text_your_reservation_expired_please_book_again"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_16ssp"
+        app:layout_constraintEnd_toEndOf="@id/bg_dialog"
+        app:layout_constraintStart_toStartOf="@id/bg_dialog"
+        app:layout_constraintTop_toBottomOf="@id/ic_dialog"
+        app:layout_constraintWidth_percent="0.8" />
+
+    <ImageView
+        android:id="@+id/btn_home"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="@dimen/_4dp"
+        android:layout_marginBottom="@dimen/_12dp"
+        android:src="@drawable/shape_bg_home"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintDimensionRatio="180:65"
+        app:layout_constraintEnd_toStartOf="@id/btn_book_again"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/title"
+        app:layout_constraintWidth_percent="0.365" />
+
+    <ImageView
+        android:id="@+id/btn_book_again"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="@dimen/_4dp"
+        android:src="@drawable/shape_bg_enter"
+        app:layout_constraintDimensionRatio="180:65"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/btn_home"
+        app:layout_constraintTop_toBottomOf="@id/title"
+        app:layout_constraintWidth_percent="0.36" />
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:fontFamily="@font/baloo2_bold"
+        android:gravity="center"
+        android:text="@string/text_home"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_16ssp"
+        app:layout_constraintBottom_toBottomOf="@id/btn_home"
+        app:layout_constraintEnd_toEndOf="@id/btn_home"
+        app:layout_constraintStart_toStartOf="@id/btn_home"
+        app:layout_constraintTop_toTopOf="@id/btn_home" />
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:fontFamily="@font/baloo2_bold"
+        android:gravity="center"
+        android:text="@string/text_retry"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_16ssp"
+        app:layout_constraintBottom_toBottomOf="@id/btn_book_again"
+        app:layout_constraintEnd_toEndOf="@id/btn_book_again"
+        app:layout_constraintStart_toStartOf="@id/btn_book_again"
+        app:layout_constraintTop_toTopOf="@id/btn_book_again" />
+</androidx.constraintlayout.widget.ConstraintLayout>

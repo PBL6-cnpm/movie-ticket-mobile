@@ -78,4 +78,19 @@
         android:name="com.pbl6.pbl6_cinestech.ui.payment.PaymentFragment"
         android:label="fragment_payment"
         tools:layout="@layout/fragment_payment" />
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.pbl6.pbl6_cinestech.ui.profile.ProfileFragment"
+        android:label="fragment_profile"
+        tools:layout="@layout/fragment_profile" />
+    <fragment
+        android:id="@+id/bookingHistoryFragment"
+        android:name="com.pbl6.pbl6_cinestech.ui.bookinghistory.BookingHistoryFragment"
+        android:label="fragment_booking_history"
+        tools:layout="@layout/fragment_booking_history" />
+    <fragment
+        android:id="@+id/mapsFragment"
+        android:name="com.pbl6.pbl6_cinestech.ui.map.MapsFragment"
+        android:label="fragment_maps"
+        tools:layout="@layout/fragment_maps" />
 </navigation>
