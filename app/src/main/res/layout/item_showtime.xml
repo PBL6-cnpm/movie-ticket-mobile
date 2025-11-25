@@ -6,6 +6,7 @@
     android:layout_height="wrap_content"
     android:layout_margin="@dimen/_8sdp"
     app:cardCornerRadius="@dimen/_4sdp"
+        android:id="@+id/item_time_select"
     app:strokeColor="@color/color_description"
     app:strokeWidth="@dimen/_1sdp">
 
