@@ -15,6 +15,8 @@ import com.pbl6.pbl6_cinestech.databinding.FragmentDetailBookingBinding
 import com.pbl6.pbl6_cinestech.ui.main.MainViewModel
 import hoang.dqm.codebase.base.activity.BaseFragment
 import hoang.dqm.codebase.base.activity.navigate
+import hoang.dqm.codebase.base.activity.popBackStack
+import hoang.dqm.codebase.utils.singleClick
 import java.time.LocalDate
 import java.time.OffsetDateTime
 import java.time.ZoneId
@@ -56,6 +58,7 @@ class DetailBookingFragment : BaseFragment<FragmentDetailBookingBinding, DetailB
                 putString("dayValue", this@DetailBookingFragment.timeAdapter.getDaySelected().value)
                 putString("timeStart", time)
             }
+            mainViewModel.setBranchSelected(this@DetailBookingFragment.adapterBranch.getSelectedBranch())
             navigate(R.id.seatBookingFragment, bundle)
         })
     }
@@ -77,9 +80,10 @@ class DetailBookingFragment : BaseFragment<FragmentDetailBookingBinding, DetailB
             // query showtime
             viewModel.showTimeResponseLiveData.value?.let { value ->
                 val showTime = value.data?.items?.find { it -> isSameDayVN(it.dayOfWeek.value, this@DetailBookingFragment.timeAdapter.getDaySelected().value) }
-                Log.d("check showtime", "setUpObserver: ${value.data?.items?.get(0)?.dayOfWeek?.value} ${this@DetailBookingFragment.timeAdapter.getDaySelected().value}")
                 showTime?.let {
                     cinemasShowTimeAdapter.setList(mutableListOf(CinemaShowTime(this@DetailBookingFragment.adapterBranch.getSelectedBranch(), showTime)))
+                }?: run {
+                    cinemasShowTimeAdapter.setList(emptyList())
                 }
             }
 
@@ -92,7 +96,7 @@ class DetailBookingFragment : BaseFragment<FragmentDetailBookingBinding, DetailB
 
         adapterBranch.setOnClickItem { position ->
             movieId?.let {
-                viewModel.allBranchResultLiveData.value?.data?.get(position)?.let { branch ->
+                adapterBranch.dataList.get(position).let { branch ->
                     viewModel.getShowTimeWithBranchAndMovie(it, branch.id)
                 }
             }
@@ -102,8 +106,13 @@ class DetailBookingFragment : BaseFragment<FragmentDetailBookingBinding, DetailB
         binding.rvBranch.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
 
-        cinemasShowTimeAdapter.setOnClickItem { position ->
+        cinemasShowTimeAdapter.setOnClickItem( { position ->
 
+        }){ address ->
+            val bundle = Bundle().apply {
+                putString("address", address)
+            }
+            navigate(R.id.mapsFragment, bundle)
         }
         binding.cinemasShowTime.adapter = cinemasShowTimeAdapter
         binding.cinemasShowTime.layoutManager = LinearLayoutManager(requireContext())
@@ -121,11 +130,11 @@ class DetailBookingFragment : BaseFragment<FragmentDetailBookingBinding, DetailB
         viewModel.allBranchResultLiveData.observe(viewLifecycleOwner) { value ->
             if (value?.success == true) {
                 if (value.data == null) return@observe
-                adapterBranch.setList(value.data)
+                adapterBranch.setList(value.data.sortedBy { if (it.name == "Cines Center") 0 else 1 })
                 movieId?.let {
-                    Log.d("check showtime", "setUpObserver: $it ${value.data[0].id}")
-                    viewModel.getShowTimeWithBranchAndMovie(it, value.data[0].id)
+                    viewModel.getShowTimeWithBranchAndMovie(it, adapterBranch.getSelectedBranch().id)
                 }
+
             }
         }
 
@@ -133,17 +142,22 @@ class DetailBookingFragment : BaseFragment<FragmentDetailBookingBinding, DetailB
             if (value?.success == true) {
                 if (value.data!=null && !value.data.items.isEmpty()){
                     val showTime = value.data.items.find { it -> isSameDayVN(it.dayOfWeek.value, this@DetailBookingFragment.timeAdapter.getDaySelected().value) }
-                    Log.d("check showtime", "setUpObserver: ${value.data.items.get(0).dayOfWeek.value} ${this@DetailBookingFragment.timeAdapter.getDaySelected().value}")
                     showTime?.let {
+
                         cinemasShowTimeAdapter.setList(mutableListOf(CinemaShowTime(this@DetailBookingFragment.adapterBranch.getSelectedBranch(), showTime)))
+                    }?:run {
+                        cinemasShowTimeAdapter.setList(emptyList())
                     }
+                }else{
+                    cinemasShowTimeAdapter.setList(emptyList())
+
                 }
-                Log.d("check showTime", "setUpObserver: ${value.data}")
             }
         }
     }
 
     override fun initListener() {
+        binding.btnBack.singleClick { popBackStack() }
     }
 
     override fun initData() {

@@ -35,7 +35,7 @@ class BranchAdapter: BaseRecyclerViewAdapter<BranchResponse, ItemBranchBinding>(
         item.imgPath?.let {
             binding.img.loadImageSketch(it)
         }
-        binding.name.text = item.name.substringBefore(" ")
+        binding.name.text = item.name.substringAfter(" ")
     }
 
     fun setOnClickItem(listener: (position: Int) -> Unit) {
