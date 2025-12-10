@@ -1,6 +1,7 @@
 package hoang.dqm.codebase.base.activity
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
@@ -33,7 +34,7 @@ fun FragmentActivity.navigate(
             anim {
                 enter = R.anim.slide_in_right
                 exit = R.anim.slide_fade_out
-                popEnter = R.anim.slide_fade_out
+                popEnter = R.anim.slide_fade_in
                 popExit = R.anim.slide_out_right
             }
             if (isPopAll) {
@@ -47,6 +48,47 @@ fun FragmentActivity.navigate(
             }
         })
     } catch (ex: Exception) {
+        Log.d("NavigateCheck", "Exception in navigate(): ${ex.message}")
+        ex.printStackTrace()
+    }
+}
+
+fun Fragment.navigateAnimationOpen(
+    destination: Int, extraData: Bundle? = null, isPop: Boolean = false
+) {
+    if (!isAdded || view == null) return
+    viewLifecycleOwner.lifecycleScope.launch {
+        viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
+            activity?.navigateAnimationOpen(destination, extraData, isPop)
+        }
+    }
+}
+
+fun FragmentActivity.navigateAnimationOpen(
+    destination: Int, extraData: Bundle? = null, isPop: Boolean = false, isPopAll: Boolean = false
+) {
+    try {
+        val navController = findNavController(R.id.navHostFragment)
+        navController.navigate(destination, extraData, navOptions {
+            anim {
+                enter = R.anim.slide_in_up
+                exit = R.anim.slide_fade_out
+                popEnter = R.anim.slide_fade_in
+                popExit = R.anim.slide_out_down
+            }
+            if (isPopAll) {
+                popUpTo(navController.graph.startDestinationId) {
+                    inclusive = true
+                }
+            } else if (isPop) {
+                navController.currentDestination?.id?.let { currentDestination ->
+                    popUpTo(currentDestination) { inclusive = true }
+                }
+            }
+        })
+    } catch (ex: Exception) {
+        Log.d("NavigateCheck", "Exception in navigate(): ${ex.message}")
+
         ex.printStackTrace()
     }
 }

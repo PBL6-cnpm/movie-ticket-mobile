@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="@dimen/_190sdp"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/_12dp"
+    android:background="@color/transparent">
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/bg_review"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:elevation="@dimen/_16sdp"
+        app:cardBackgroundColor="@color/topbar_1d273a"
+        app:cardCornerRadius="@dimen/_16sdp"
+        app:layout_constraintDimensionRatio="164:250"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/img_movie"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/img_movie_test"
+        app:layout_constraintBottom_toBottomOf="@id/bg_review"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toEndOf="@id/bg_review"
+        app:layout_constraintHorizontal_bias="0.05"
+        app:layout_constraintStart_toStartOf="@id/bg_review"
+        app:layout_constraintTop_toTopOf="@id/bg_review"
+        app:layout_constraintVertical_bias="0.05"
+        app:layout_constraintWidth_percent="0.18"
+        app:shapeAppearanceOverlay="@style/CircleImageView" />
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/img_reviewer"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/img_avatar"
+        app:layout_constraintBottom_toBottomOf="@id/img_movie"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toEndOf="@id/img_movie"
+        app:layout_constraintHorizontal_bias="0.95"
+        app:layout_constraintStart_toStartOf="@id/img_movie"
+        app:layout_constraintTop_toTopOf="@id/img_movie"
+        app:layout_constraintVertical_bias="0.95"
+        app:layout_constraintWidth_percent="0.1"
+        app:shapeAppearanceOverlay="@style/CircleImageView" />
+
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_6sdp"
+        android:layout_marginEnd="@dimen/_6sdp"
+        android:fontFamily="@font/baloo2_semibold"
+        android:textColor="@color/white"
+        android:textSize="@dimen/_12ssp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/bg_review"
+        app:layout_constraintStart_toEndOf="@id/img_movie"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.045"
+        tools:text="Review: Batman" />
+
+    <TextView
+        android:id="@+id/tv_description"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_6sdp"
+        android:layout_marginEnd="@dimen/_6sdp"
+        android:fontFamily="@font/baloo2_semibold"
+        android:textColor="@color/white"
+        app:layout_constraintWidth_percent="0.4"
+        android:textSize="@dimen/_10ssp"
+        android:lines="1"
+        android:ellipsize="end"
+        app:layout_constraintEnd_toStartOf="@id/tv_time"
+        app:layout_constraintStart_toStartOf="@id/tv_title"
+        app:layout_constraintTop_toBottomOf="@id/tv_title"
+        app:layout_constraintVertical_bias="0.045"
+        tools:text="Hoang Duasdadong" />
+
+    <TextView
+        android:id="@+id/tv_time"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_6sdp"
+        android:layout_marginEnd="@dimen/_6sdp"
+        android:fontFamily="@font/baloo2_semibold"
+        android:textColor="@color/white"
+        android:textSize="@dimen/_10ssp"
+        app:layout_constraintStart_toEndOf="@id/tv_description"
+        app:layout_constraintTop_toBottomOf="@id/tv_title"
+        app:layout_constraintVertical_bias="0.045"
+        tools:text="51s" />
+
+    <TextView
+        android:id="@+id/tv_rated"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_8sdp"
+        android:layout_marginTop="@dimen/_4sdp"
+        android:layout_marginEnd="@dimen/_6sdp"
+        android:fontFamily="@font/baloo2_semibold"
+        android:textColor="@color/white"
+        android:textSize="@dimen/_12ssp"
+        app:layout_constraintEnd_toEndOf="@id/bg_review"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/img_reviewer"
+        tools:text="⭐ 5/10" />
+
+    <TextView
+        android:id="@+id/tv_comment"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_8sdp"
+        android:layout_marginTop="@dimen/_4sdp"
+        android:layout_marginEnd="@dimen/_6sdp"
+        android:ellipsize="end"
+        android:fontFamily="@font/baloo2_semibold"
+        android:lines="1"
+        android:textColor="@color/white"
+        android:textSize="@dimen/_10ssp"
+        app:layout_constraintEnd_toEndOf="@id/bg_review"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_rated"
+        tools:text="Phim hay qua" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/bg_img_rated"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toEndOf="@id/bg_review"
+        app:cardCornerRadius="@dimen/_8sdp"
+        app:layout_constraintStart_toStartOf="@id/bg_review"
+        app:layout_constraintTop_toBottomOf="@id/tv_comment"
+        app:layout_constraintWidth_percent="0.8">
+        <ImageView
+            android:id="@+id/img_rated"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/img_star_1"
+            android:scaleType="centerCrop"/>
+    </androidx.cardview.widget.CardView>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/_4sdp"
+        app:layout_constraintEnd_toEndOf="@id/bg_review"
+        app:layout_constraintStart_toStartOf="@id/bg_review"
+        app:layout_constraintTop_toBottomOf="@id/bg_img_rated"
+        app:layout_constraintWidth_percent="0.8">
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/bg_img_content_movie"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/img_movie_test"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_percent="0.15"
+            app:shapeAppearanceOverlay="@style/RoundedImageStyle" />
+
+        <TextView
+            android:id="@+id/tv_title_movie"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_2sdp"
+            android:fontFamily="@font/baloo2_semibold"
+            android:lines="1"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_9ssp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.1"
+            app:layout_constraintStart_toEndOf="@id/bg_img_content_movie"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_percent="0.7"
+            tools:text="Teeyod: Quy an tang 3asd" />
+
+        <TextView
+            android:id="@+id/tv_genre"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_2sdp"
+            android:fontFamily="@font/baloo2_semibold"
+            android:lines="1"
+            android:textColor="@color/color_description"
+            android:textSize="@dimen/_7ssp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.1"
+            app:layout_constraintStart_toEndOf="@id/bg_img_content_movie"
+            app:layout_constraintTop_toBottomOf="@id/tv_title_movie"
+            app:layout_constraintWidth_percent="0.7"
+            tools:text="Action, Family,..." />
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:src="@drawable/icon_next"
+            app:layout_constraintStart_toEndOf="@id/tv_title_movie"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintWidth_percent="0.1"
+            />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

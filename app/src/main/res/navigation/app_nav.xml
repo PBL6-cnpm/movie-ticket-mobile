@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/app_nav"
-    app:startDestination="@id/forgotPasswordFragment">
+    app:startDestination="@id/homeFragment">
 
     <fragment
         android:id="@+id/forgotPasswordFragment"
@@ -35,4 +35,47 @@
         android:name="com.pbl6.pbl6_cinestech.ui.password_changed.PasswordChangedFragment"
         android:label="fragment_password_changed"
         tools:layout="@layout/fragment_password_changed" />
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.pbl6.pbl6_cinestech.ui.home.HomeFragment"
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_home" />
+    <fragment
+        android:id="@+id/detailMovieFragment"
+        android:name="com.pbl6.pbl6_cinestech.ui.detailmovie.DetailMovieFragment"
+        android:label="fragment_detail_movie"
+        tools:layout="@layout/fragment_detail_movie" />
+    <fragment
+        android:id="@+id/fullScreenVideoFragment"
+        android:name="com.pbl6.pbl6_cinestech.ui.fullvideo.FullScreenVideoFragment"
+        android:label="Full Screen Video">
+        <argument
+            android:name="video_id"
+            app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/detailBookingFragment"
+        android:name="com.pbl6.pbl6_cinestech.ui.detailbooking.DetailBookingFragment"
+        android:label="fragment_detail_booking"
+        tools:layout="@layout/fragment_detail_booking" />
+    <fragment
+        android:id="@+id/seatBookingFragment"
+        android:name="com.pbl6.pbl6_cinestech.ui.seatbooking.SeatBookingFragment"
+        android:label="fragment_seat_booking"
+        tools:layout="@layout/fragment_seat_booking" />
+    <fragment
+        android:id="@+id/refreshmentsFragment"
+        android:name="com.pbl6.pbl6_cinestech.ui.refreshments.RefreshmentsFragment"
+        android:label="fragment_refreshments"
+        tools:layout="@layout/fragment_refreshments" />
+    <fragment
+        android:id="@+id/paymentInformationFragment"
+        android:name="com.pbl6.pbl6_cinestech.ui.payment_information.PaymentInformationFragment"
+        android:label="fragment_payment_information"
+        tools:layout="@layout/fragment_payment_information" />
+    <fragment
+        android:id="@+id/paymentFragment"
+        android:name="com.pbl6.pbl6_cinestech.ui.payment.PaymentFragment"
+        android:label="fragment_payment"
+        tools:layout="@layout/fragment_payment" />
 </navigation>
