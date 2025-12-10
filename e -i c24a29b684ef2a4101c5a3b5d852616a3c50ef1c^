@@ -1,0 +1,83 @@
+[33mcommit fd4387a5ab7bc1da61095a97abdf0a46fb0384e6[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mprofile_screen[m[33m)[m
+Author: Hoang <duongminhhoang333@gmail.com>
+Date:   Wed Dec 10 09:08:09 2025 +0700
+
+    feat: add adapter detail movie
+
+[33mcommit c24a29b684ef2a4101c5a3b5d852616a3c50ef1c[m
+Author: Hoang <duongminhhoang333@gmail.com>
+Date:   Wed Dec 10 09:07:15 2025 +0700
+
+    feat: add branch adaper
+
+[33mcommit 7723dc502c0132a38a4f8f93a5d2ae690d66e341[m[33m ([m[1;31morigin/profile_screen[m[33m)[m
+Author: Hoang <duongminhhoang333@gmail.com>
+Date:   Sat Nov 8 19:12:24 2025 +0700
+
+    feat: profile api model
+
+[33mcommit 34c4f28a61e3fb79618815badf14858c4f821919[m[33m ([m[1;32mbranch_test[m[33m)[m
+Author: Hoang <duongminhhoang333@gmail.com>
+Date:   Fri Nov 7 17:31:28 2025 +0700
+
+    feat: add screen profile ui
+
+[33mcommit 2eed3d55f67db3a39cbf45fb664fda5efdaff4d3[m[33m ([m[1;31morigin/branch_test[m[33m)[m
+Author: Hoang <duongminhhoang333@gmail.com>
+Date:   Fri Nov 7 17:31:28 2025 +0700
+
+    test
+
+[33mcommit aba1693d2f4ca9181d6b7e8a1c7e9038b67c30c8[m
+Author: Hoang <duongminhhoang333@gmail.com>
+Date:   Fri Nov 7 00:38:32 2025 +0700
+
+    payment
+
+[33mcommit a5ea94683e316590194604a1968e9d5412615c96[m
+Author: Hoang <duongminhhoang333@gmail.com>
+Date:   Thu Nov 6 00:12:43 2025 +0700
+
+    test
+
+[33mcommit fd1e44e6d4c254d413a1dd789d9f7ee168520390[m
+Author: Hoang <duongminhhoang333@gmail.com>
+Date:   Wed Nov 5 09:24:34 2025 +0700
+
+    test app
+
+[33mcommit 224f4a5d6fe7a2631197e48d4f3ebc6b56f3cede[m[33m ([m[1;31morigin/feat/ui_authentication_screen[m[33m, [m[1;32mfeat/ui_authentication_screen[m[33m)[m
+Author: Hoang <duongminhhoang333@gmail.com>
+Date:   Thu Sep 25 22:11:52 2025 +0700
+
+    feat: ui main
+
+[33mcommit b44ba0936c622d1da6fccb916c0f14ffb4036b44[m
+Author: Hoang <duongminhhoang333@gmail.com>
+Date:   Thu Sep 25 22:11:29 2025 +0700
+
+    verify
+
+[33mcommit d2aba416390524d166eeb293044600c0dbb93551[m
+Author: Hoang <duongminhhoang333@gmail.com>
+Date:   Thu Sep 25 22:11:12 2025 +0700
+
+    feat: register screen
+
+[33mcommit 2451c6b5dd2b4a2ad64073a552306026eaea4966[m
+Author: Hoang <duongminhhoang333@gmail.com>
+Date:   Thu Sep 25 22:10:38 2025 +0700
+
+    feat: login screen
+
+[33mcommit 13acd4fa4e2b8213c02e5b884eb990eb3742a5f5[m
+Author: Hoang <duongminhhoang333@gmail.com>
+Date:   Thu Sep 25 22:09:57 2025 +0700
+
+    feat: forgot screen
+
+[33mcommit 647ebd1d5e772215258978dfcf466da6721c8d2f[m[33m ([m[1;31morigin/main[m[33m)[m
+Author: Hoang <duongminhhoang333@gmail.com>
+Date:   Mon Sep 22 00:11:46 2025 +0700
+
+    init source base

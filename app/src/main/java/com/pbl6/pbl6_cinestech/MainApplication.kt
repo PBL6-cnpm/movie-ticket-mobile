@@ -3,6 +3,7 @@ package com.pbl6.pbl6_cinestech
 import androidx.core.content.ContextCompat
 import com.makeramen.roundedimageview.BuildConfig
 import com.pbl6.pbl6_cinestech.data.api.NetworkProvider
+import com.stripe.android.PaymentConfiguration
 import hoang.dqm.codebase.base.application.BaseApplication
 import hoang.dqm.codebase.data.AppInfo
 
@@ -18,5 +19,9 @@ class MainApplication: BaseApplication() {
     override fun onCreate() {
         super.onCreate()
         NetworkProvider.init(this)
+        PaymentConfiguration.init(
+            applicationContext,
+            "pk_test_51SNawNRrGUU3miy79djVPUUoZxmsO9x935IryNdhkHhuSREJkH5JDYxy0BkYBvnRli1CohHvg8Z6bXxSAXA1ffFM00Clpw4xC4"
+        )
     }
 }

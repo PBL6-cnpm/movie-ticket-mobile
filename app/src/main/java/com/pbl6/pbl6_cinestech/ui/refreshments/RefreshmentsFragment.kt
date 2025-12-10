@@ -1,8 +1,10 @@
 package com.pbl6.pbl6_cinestech.ui.refreshments
 
+import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.pbl6.pbl6_cinestech.R
 import com.pbl6.pbl6_cinestech.data.model.request.ApplyRefreshmentsRequest
@@ -29,11 +31,20 @@ class RefreshmentsFragment : BaseFragment<FragmentRefreshmentsBinding, Refreshme
         arguments?.getString("idShowTime") ?: ""
     }
 
+    private val seatIds by lazy {
+        arguments?.getStringArrayList("seatIds") ?: arrayListOf()
+    }
+    private val seatNumbers by lazy {
+        arguments?.getStringArrayList("seatNumbers") ?: arrayListOf()
+    }
     private val ticketsPrice by lazy {
         arguments?.getInt("ticketsPrice") ?: 0
     }
     private val bookingId by lazy {
         arguments?.getString("bookingId")?:""
+    }
+    private val timeText by lazy {
+        arguments?.getString("timeText")?:""
     }
     private val refreshmentsAdapter: RefreshmentsAdapter by lazy {
         RefreshmentsAdapter()
@@ -50,8 +61,19 @@ class RefreshmentsFragment : BaseFragment<FragmentRefreshmentsBinding, Refreshme
         }
         onBackPressed { popBackStack() }
         binding.btnNext.singleClick {
-            val refreshmentOption = this@RefreshmentsFragment.refreshmentsAdapter.getListRefreshments()
-            viewModel.applyRefreshments(ApplyRefreshmentsRequest(bookingId, refreshmentsOption = refreshmentOption))
+//            val refreshmentOption = this@RefreshmentsFragment.refreshmentsAdapter.getListRefreshments()
+////            viewModel.applyRefreshments(ApplyRefreshmentsRequest(bookingId, refreshmentsOption = refreshmentOption))
+//            val bundle = Bundle().apply {
+//                putString("timeText", timeText)
+//                putStringArrayList("seatIds", seatIds)
+//                putStringArrayList("seatNumbers", seatNumbers)
+//                putInt("ticketsPrice", ticketsPrice)
+//                putInt("refreshmentPrice", viewModel.price.value?:0)
+//                putString("bookingId", bookingId)
+//            }
+//            mainViewModel.setListRefreshments(this@RefreshmentsFragment.refreshmentsAdapter.getListRefreshments())
+//            navigate(R.id.paymentInformationFragment, bundle)
+            viewModel.applyRefreshments(ApplyRefreshmentsRequest(bookingId, refreshmentsOption = this@RefreshmentsFragment.refreshmentsAdapter.getListRefreshments()))
         }
     }
 
@@ -75,10 +97,20 @@ class RefreshmentsFragment : BaseFragment<FragmentRefreshmentsBinding, Refreshme
             binding.refreshmentsPrice.text = formatVND(value.toLong())
             binding.total.text = formatVND((value + ticketsPrice).toLong())
         }
-        viewModel.applyRefreshmentsResultLiveData.observe(viewLifecycleOwner){ value ->
-            if (value?.success == true){
-                if (value.data == null) return@observe
-                navigate(R.id.paymentInformationFragment)
+        lifecycleScope.launchWhenStarted {
+            viewModel.applyRefreshmentsEvent.collect { value ->
+                if (value.success) {
+                    val bundle = Bundle().apply {
+                        putString("timeText", timeText)
+                        putStringArrayList("seatIds", seatIds)
+                        putStringArrayList("seatNumbers", seatNumbers)
+                        putInt("ticketsPrice", ticketsPrice)
+                        putInt("refreshmentPrice", viewModel.price.value ?: 0)
+                        putString("bookingId", value.data?.id ?: "")
+                    }
+                    mainViewModel.setListRefreshments(refreshmentsAdapter.getListRefreshments())
+                    navigate(R.id.paymentInformationFragment, bundle)
+                }
             }
         }
     }
@@ -86,7 +118,7 @@ class RefreshmentsFragment : BaseFragment<FragmentRefreshmentsBinding, Refreshme
     private fun setUpAdapter() {
         refreshmentsAdapter.setOnClick({ item, position ->
             viewModel.add(item.price)
-            this@RefreshmentsFragment.refreshmentsAdapter.addRefreshment(item.id, position)
+            this@RefreshmentsFragment.refreshmentsAdapter.addRefreshment(item, position)
         }) { item, position ->
             viewModel.minus(item.price)
             this@RefreshmentsFragment.refreshmentsAdapter.minusRefreshment(item.id, position)

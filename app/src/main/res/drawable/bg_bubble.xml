@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Phần bong bóng -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#FFFFFF"/>
+            <corners android:radius="10dp"/>
+        </shape>
+    </item>
+
+    <!-- Mũi tên -->
+    <item
+        android:gravity="bottom|start"
+        android:left="20dp"
+        android:bottom="-6dp">
+
+        <rotate
+            android:fromDegrees="45"
+            android:toDegrees="45"
+            android:pivotX="50%"
+            android:pivotY="50%">
+            <shape android:shape="rectangle">
+                <size android:width="12dp" android:height="12dp"/>
+                <solid android:color="#FFFFFF"/>
+            </shape>
+        </rotate>
+
+    </item>
+
+</layer-list>
+
