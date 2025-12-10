@@ -23,7 +23,7 @@
         app:layout_constraintGuide_percent="0.94" />
 
     <TextView
-        android:id="@+id/tv_title"
+        android:id="@+id/tv_title_login"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/baloo2_semibold"
@@ -43,8 +43,8 @@
         android:text="@string/text_create_account_and_enjoy_all_services"
         android:textColor="@color/color_description"
         android:textSize="@dimen/_16ssp"
-        app:layout_constraintStart_toStartOf="@id/tv_title"
-        app:layout_constraintTop_toBottomOf="@id/tv_title" />
+        app:layout_constraintStart_toStartOf="@id/tv_title_login"
+        app:layout_constraintTop_toBottomOf="@id/tv_title_login" />
 
     <TextView
         android:id="@+id/tv_email"
@@ -96,7 +96,6 @@
         android:layout_height="wrap_content"
         android:background="@drawable/edt_border"
         android:drawableStart="@drawable/icon_password"
-        android:drawableEnd="@drawable/icon_invisible"
         android:drawablePadding="@dimen/_8dp"
         android:drawableTint="#808080"
         android:fontFamily="@font/baloo2_semibold"
@@ -110,6 +109,17 @@
         app:layout_constraintEnd_toEndOf="@id/line_end"
         app:layout_constraintStart_toStartOf="@id/line_start"
         app:layout_constraintTop_toBottomOf="@id/tv_password" />
+
+    <ImageView
+        android:id="@+id/img_toggle_visible_password"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintEnd_toEndOf="@id/edt_password"
+        app:layout_constraintTop_toTopOf="@id/edt_password"
+        app:layout_constraintBottom_toBottomOf="@id/edt_password"
+        app:layout_constraintDimensionRatio="1:1"
+        android:padding="@dimen/_12dp"
+        android:src="@drawable/icon_invisible" />
 
     <TextView
         android:id="@+id/tv_forgot_password"
