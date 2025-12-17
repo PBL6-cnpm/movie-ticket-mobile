@@ -1,5 +1,6 @@
 package com.pbl6.pbl6_cinestech.ui.login
 
+import android.content.Intent
 import android.text.InputType
 import android.util.Log
 import android.view.MotionEvent
@@ -7,6 +8,10 @@ import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.api.ApiException
 import com.pbl6.pbl6_cinestech.R
 import com.pbl6.pbl6_cinestech.data.repository.RepositoryProvider
 import com.pbl6.pbl6_cinestech.databinding.FragmentLoginBinding
@@ -27,10 +32,40 @@ class LoginFragment : BaseFragment<FragmentLoginBinding, LoginViewModel>() {
         get() = LoginViewModel.LoginViewModelFactory(
             RepositoryProvider.authRepository
         )
-    private val mainViewModel: MainViewModel by activityViewModels()
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
 
+        if (requestCode == RC_SIGN_IN) {
+            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
+            try {
+                val account = task.getResult(ApiException::class.java)
+                val idToken = account?.idToken
+                if (idToken != null) {
+//                    loginWithBackend(idToken)
+                    viewModel.loginWithGoogle(idToken)
+                }
+            } catch (e: ApiException) {
+                e.printStackTrace()
+            }
+        }
+    }
+    private val mainViewModel: MainViewModel by activityViewModels()
+    private lateinit var googleSignInClient: GoogleSignInClient
+    private val RC_SIGN_IN = 1001
     override fun initView() {
         setUpObserver()
+
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken("469959680646-g0vokc4ct14c9dd81jvd1nilklasufus.apps.googleusercontent.com") // client_id Google
+            .requestEmail()
+            .build()
+
+        googleSignInClient = GoogleSignIn.getClient(requireActivity(), gso)
+    }
+
+    private fun signIn() {
+        val signInIntent = googleSignInClient.signInIntent
+        startActivityForResult(signInIntent, RC_SIGN_IN)
     }
 
     fun setUpObserver(){
@@ -79,6 +114,9 @@ class LoginFragment : BaseFragment<FragmentLoginBinding, LoginViewModel>() {
         }
         onBackPressed {
             popBackStack(R.id.homeFragment)
+        }
+        binding.btnLoginWGoogle.singleClick {
+            signIn()
         }
     }
 

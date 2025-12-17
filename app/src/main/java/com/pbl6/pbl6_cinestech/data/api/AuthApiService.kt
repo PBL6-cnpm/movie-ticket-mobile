@@ -1,6 +1,7 @@
 package com.pbl6.pbl6_cinestech.data.api
 
 import com.pbl6.pbl6_cinestech.data.model.request.ForgotPasswordRequest
+import com.pbl6.pbl6_cinestech.data.model.request.GoogleLoginToken
 import com.pbl6.pbl6_cinestech.data.model.request.LoginRequest
 import com.pbl6.pbl6_cinestech.data.model.request.RefreshTokenRequest
 import com.pbl6.pbl6_cinestech.data.model.request.RegisterRequest
@@ -33,4 +34,8 @@ interface AuthApiService {
 
     @GET("/api/v1/accounts/me")
     suspend fun me(): Response<AccountResponse>
+
+    @POST("/api/v1/auth/google/login")
+    @NoAuth
+    suspend fun loginWithGoogle(@Body googleToken: GoogleLoginToken): Response<LoginResponse>
 }
