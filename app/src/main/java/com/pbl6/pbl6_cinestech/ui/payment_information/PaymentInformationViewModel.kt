@@ -19,6 +19,7 @@ import com.pbl6.pbl6_cinestech.data.repository.BookingRepository
 import com.pbl6.pbl6_cinestech.data.repository.PaymentRepository
 import hoang.dqm.codebase.base.viewmodel.BaseViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class PaymentInformationViewModel(

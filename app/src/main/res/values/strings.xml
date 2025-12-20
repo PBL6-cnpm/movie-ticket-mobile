@@ -103,4 +103,8 @@
     <string name="text_your_reservation_expired_please_book_again">Your reservation expired. Please book again.</string>
     <string name="text_home">Home</string>
     <string name="text_retry">Retry</string>
+    <string name="text_oops_no_showtimes_today">Oops! No showtimes today.</string>
+    <string name="text_find_show">Find show</string>
+    <string name="text_reschedule_showtime">Reschedule showtime</string>
+    <string name="text_select">Select</string>
 </resources>

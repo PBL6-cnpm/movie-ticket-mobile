@@ -22,6 +22,7 @@ navigationSafeArgsGradlePlugin = "2.9.0"
 navigationSafeArgsGradlePluginVersion = "2.7.7"
 fragmentKtx = "1.8.6"
 roundedimageview = "2.3.0"
+googleServices = "4.4.2"
 sdpAndroid = "1.1.1"
 lottie = "6.6.7"
 sspAndroid = "1.1.1"
@@ -51,6 +52,7 @@ core = { module = "com.pierfrancescosoffritti.androidyoutubeplayer:core", versio
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-fragment-ktx = { module = "androidx.fragment:fragment-ktx", version.ref = "fragmentKtx" }
+google-services = { module = "com.google.gms:google-services", version.ref = "googleServices" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }

@@ -11,4 +11,7 @@ interface BranchApiService {
 
     @GET("/api/v1/branches/{movieId}")
     suspend fun getBranchWithMovieId(@Path("movieId") movieId: String): Response<BranchResponse>
+
+    @GET("/api/v1/branches/movies/{movieId}")
+    suspend fun getBranchesWithMovieId(@Path("movieId") movieId: String): Response<List<BranchResponse>>
 }

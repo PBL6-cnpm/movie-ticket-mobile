@@ -1,6 +1,7 @@
 package com.pbl6.pbl6_cinestech.ui.seatbooking
 
 import android.util.Log
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -14,13 +15,16 @@ import com.pbl6.pbl6_cinestech.data.model.response.SeatBookingResponse
 import com.pbl6.pbl6_cinestech.data.repository.BookingRepository
 import com.pbl6.pbl6_cinestech.data.repository.SeatRepository
 import hoang.dqm.codebase.base.viewmodel.BaseViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
 class SeatBookingViewModel(
     private val seatRepository: SeatRepository,
-    private val bookingRepository: BookingRepository
+    private val bookingRepository: BookingRepository,
 ) : BaseViewModel() {
+
+
     private val _price: MutableLiveData<Int> = MutableLiveData(0)
     val price : LiveData<Int> get() = _price
     fun setPrice(value: Int){
@@ -46,14 +50,16 @@ class SeatBookingViewModel(
         }
     }
 
-    private val _holdSeatResult = MutableStateFlow<Response<HoldingSeatResponse>?>(null)
-    val holdSeatResult: MutableStateFlow<Response<HoldingSeatResponse>?> = _holdSeatResult
-    val holdSeatResultLiveData = holdSeatResult.asLiveData()
+//    private val _holdSeatResult = MutableStateFlow<Response<HoldingSeatResponse>?>(null)
+//    val holdSeatResult: MutableStateFlow<Response<HoldingSeatResponse>?> = _holdSeatResult
+//    val holdSeatResultLiveData = holdSeatResult.asLiveData()
+    private val _holdSeatResult = MutableSharedFlow<Response<HoldingSeatResponse>>()
+    val holdSeatResult = _holdSeatResult
     fun holdSeat(bookingRequest: HoldingRequest){
         viewModelScope.launch {
             try {
                 val response = bookingRepository.holdSeat(bookingRequest)
-                _holdSeatResult.value = response
+                _holdSeatResult.emit(response)
             }catch (e: Exception){
                 Log.e("check hold", "hold error: ${e.message}", e)
 

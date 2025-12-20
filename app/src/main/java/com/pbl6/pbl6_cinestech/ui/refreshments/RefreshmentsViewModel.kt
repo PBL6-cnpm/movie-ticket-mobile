@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
+import com.google.gson.Gson
 import com.pbl6.pbl6_cinestech.data.model.request.ApplyRefreshmentsRequest
 import com.pbl6.pbl6_cinestech.data.model.request.HoldingRequest
 import com.pbl6.pbl6_cinestech.data.model.response.BookingResponse
@@ -60,6 +61,7 @@ class RefreshmentsViewModel(
     fun applyRefreshments(bookingRequest: ApplyRefreshmentsRequest){
         viewModelScope.launch {
             try {
+                Log.d("BOOKING_JSON", Gson().toJson(bookingRequest))
                 val response = bookingRepository.applyRefreshments(bookingRequest)
                 _applyRefreshmentsEvent.emit(response)
             }catch (e: Exception){

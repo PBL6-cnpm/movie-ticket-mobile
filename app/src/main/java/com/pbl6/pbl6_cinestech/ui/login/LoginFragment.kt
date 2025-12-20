@@ -79,7 +79,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding, LoginViewModel>() {
                     // navigate to main
                     SecurePrefs.saveTokens(requireContext(), value.data.accessToken, value.data.refreshToken)
                     mainViewModel.setLogin(true)
-                    navigate(R.id.homeFragment)
+                    navigate(R.id.homeFragment, isPop = true)
                 }
             }else{
                 value?.message?.let {

@@ -6,12 +6,19 @@ import com.pbl6.pbl6_cinestech.data.model.request.Refreshments
 import com.pbl6.pbl6_cinestech.data.model.response.AccountResponse
 import com.pbl6.pbl6_cinestech.data.model.response.BranchResponse
 import com.pbl6.pbl6_cinestech.data.model.response.MovieResponse
+import com.pbl6.pbl6_cinestech.data.model.response.ShowTimeResponse
 import com.pbl6.pbl6_cinestech.data.model.response.VoucherResponse
 import hoang.dqm.codebase.ui.vm.BaseMainViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
 class MainViewModel : BaseMainViewModel() {
+    private val _showTimeResponse = MutableLiveData<ShowTimeResponse>()
+    val showTimeResponse: LiveData<ShowTimeResponse> get() = _showTimeResponse
+    fun setShowTimeResponse(value: ShowTimeResponse){
+        _showTimeResponse.value = value
+    }
+
     private val _movieSelected = MutableStateFlow<MovieResponse?>(null)
     val currentMovieSelected = _movieSelected.asStateFlow()
     fun setMovieSelected(movie: MovieResponse){

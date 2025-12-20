@@ -15,6 +15,7 @@ import com.pbl6.pbl6_cinestech.ui.main.MainViewModel
 import com.pbl6.pbl6_cinestech.utils.SecurePrefs
 import hoang.dqm.codebase.base.activity.BaseFragment
 import hoang.dqm.codebase.base.activity.navigate
+import hoang.dqm.codebase.base.activity.onBackPressed
 import hoang.dqm.codebase.data.ItemList
 import hoang.dqm.codebase.utils.loadImageSketch
 import hoang.dqm.codebase.utils.singleClick
@@ -157,6 +158,9 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>() {
     }
 
     override fun initListener() {
+        onBackPressed {
+
+        }
         binding.btnLogin.singleClick {
             navigate(R.id.loginFragment)
         }

@@ -77,13 +77,8 @@ class PaymentInformationFragment : BaseFragment<FragmentPaymentInformationBindin
             popBackStack(R.id.refreshmentsFragment)
         }
         binding.btnNext.singleClick {
-//            bookingId?.let {
-//                viewModel.createPayment(PaymentRequest(bookingId))
-//            }
-//            viewModel.bookingSeat(BookingRequest(bookingId, emptyList(), null))
-
+            binding.btnNext.isEnabled = false
             viewModel.bookingSeat(BookingRequest(bookingId, mainViewModel.getListRefreshments().map { RefreshmentsOrder(it.refreshmentId, it.quantity) }, viewModel.applyVoucherResponseLiveData.value?.data?.code))
-//            navigate(R.id.paymentFragment)
         }
 
         binding.selectVoucher.singleClick {
@@ -139,6 +134,9 @@ class PaymentInformationFragment : BaseFragment<FragmentPaymentInformationBindin
                     merchantDisplayName = "CineStech"
                 )
                 paymentSheet.presentWithPaymentIntent(clientSecret, config)
+                binding.btnNext.isEnabled = true
+            } else {
+                binding.btnNext.isEnabled = true
             }
         }
 
@@ -148,6 +146,7 @@ class PaymentInformationFragment : BaseFragment<FragmentPaymentInformationBindin
                 viewModel.createPayment(PaymentRequest(value.data.bookingId))
 //                }
             } else if (value?.success == false){
+                binding.btnNext.isEnabled = true
                 showDialogBookAgain()
             }
         }

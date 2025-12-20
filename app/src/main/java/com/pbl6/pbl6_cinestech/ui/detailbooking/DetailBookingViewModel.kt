@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
+import com.google.gson.Gson
 import com.pbl6.pbl6_cinestech.data.model.response.BranchResponse
 import com.pbl6.pbl6_cinestech.data.model.response.ItemWrapper
 import com.pbl6.pbl6_cinestech.data.model.response.Response
@@ -24,7 +25,7 @@ class DetailBookingViewModel(
 ) : BaseViewModel() {
     override fun onCreate(owner: LifecycleOwner) {
         super.onCreate(owner)
-        getAllBranchResult()
+//        getAllBranchResult()
     }
 
     private val _branchBookingResult = MutableStateFlow<Response<BranchResponse>?>(null)
@@ -53,6 +54,16 @@ class DetailBookingViewModel(
         }
     }
 
+    fun getAllBranchesWithMovieId(movieId: String){
+        viewModelScope.launch {
+            try {
+                val response = branchRepository.getBranchesWithMovieId(movieId)
+                _allBranchResult.value = response
+            } catch (e: Exception) {
+            }
+        }
+    }
+
     private val _showTimeResponse = MutableStateFlow<Response<ItemWrapper<ShowTimeResponse>>?>(null)
     val showTimeResponse: MutableStateFlow<Response<ItemWrapper<ShowTimeResponse>>?> = _showTimeResponse
     val showTimeResponseLiveData = showTimeResponse.asLiveData()
@@ -60,6 +71,8 @@ class DetailBookingViewModel(
         viewModelScope.launch {
             try {
                 val response = showTimeRepository.getShowTimeWithBranchAndMovie(movieId, branchId)
+                Log.d("BOOKING_JSON", "$response")
+
                 _showTimeResponse.value = response
             }catch (e: Exception){
                 Log.e("showTimeView", "Login error: ${e.message}", e)
