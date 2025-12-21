@@ -432,12 +432,25 @@ class CinemaSeatView @JvmOverloads constructor(
             val rowSeats = seats.filter { it.name.startsWith(rowLabel) }
                 .sortedBy { it.name.substring(1).toIntOrNull() ?: 0 }
 
+            var skipNext = false
             rowSeats.forEachIndexed { seatIndex, seat ->
+                if (skipNext) {
+                    skipNext = false
+                    return@forEachIndexed
+                }
+
+                val isCoupleSeat = seat.type.name.contains("Couple", ignoreCase = true)
+
                 val seatX = calculateCenteredSeatX(rowSeats.size, seatIndex)
-                val rect = RectF(seatX, rowY, seatX + seatSize, rowY + seatSize)
+                val seatWidth = if (isCoupleSeat) (seatSize * 2) + seatSpacing else seatSize
+                val rect = RectF(seatX, rowY, seatX + seatWidth, rowY + seatSize)
 
                 if (rect.contains(x, y)) {
                     return true
+                }
+
+                if (isCoupleSeat) {
+                    skipNext = true
                 }
             }
         }
@@ -460,9 +473,18 @@ class CinemaSeatView @JvmOverloads constructor(
             val rowSeats = seats.filter { it.name.startsWith(rowLabel) }
                 .sortedBy { it.name.substring(1).toIntOrNull() ?: 0 }
 
+            var skipNext = false
             rowSeats.forEachIndexed { seatIndex, seat ->
+                if (skipNext) {
+                    skipNext = false
+                    return@forEachIndexed
+                }
+
+                val isCoupleSeat = seat.type.name.contains("Couple", ignoreCase = true)
+
                 val seatX = calculateCenteredSeatX(rowSeats.size, seatIndex)
-                val rect = RectF(seatX, rowY, seatX + seatSize, rowY + seatSize)
+                val seatWidth = if (isCoupleSeat) (seatSize * 2) + seatSpacing else seatSize
+                val rect = RectF(seatX, rowY, seatX + seatWidth, rowY + seatSize)
 
                 if (rect.contains(x, y) && !seat.isOccupied) {
                     seat.isSelected = !seat.isSelected
@@ -475,6 +497,10 @@ class CinemaSeatView @JvmOverloads constructor(
                     }
                     invalidate()
                     return
+                }
+
+                if (isCoupleSeat) {
+                    skipNext = true
                 }
             }
         }
