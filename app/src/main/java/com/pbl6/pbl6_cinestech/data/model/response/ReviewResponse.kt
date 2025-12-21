@@ -1,6 +1,6 @@
 package com.pbl6.pbl6_cinestech.data.model.response
 
-class ReviewResponse(
+data class ReviewResponse(
     var rating: Int,
     var comment: String,
     var account: AccountResponse,

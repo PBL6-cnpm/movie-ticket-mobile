@@ -1,14 +1,23 @@
 package com.pbl6.pbl6_cinestech.ui.detailmovie
 
 import android.os.Bundle
+import android.view.View
+import android.widget.ImageView
+import android.widget.Toast
 import androidx.core.os.bundleOf
+import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navOptions
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.pbl6.pbl6_cinestech.R
+import com.pbl6.pbl6_cinestech.data.model.request.AuthEvent
+import com.pbl6.pbl6_cinestech.data.model.request.PaymentRequest
+import com.pbl6.pbl6_cinestech.data.model.request.ReviewRequest
 import com.pbl6.pbl6_cinestech.data.model.response.GenreResponse
+import com.pbl6.pbl6_cinestech.data.model.response.ReviewResponse
 import com.pbl6.pbl6_cinestech.data.repository.RepositoryProvider
 import com.pbl6.pbl6_cinestech.databinding.FragmentDetailMovieBinding
 import com.pbl6.pbl6_cinestech.ui.main.MainViewModel
@@ -17,13 +26,15 @@ import hoang.dqm.codebase.base.activity.navigate
 import hoang.dqm.codebase.base.activity.popBackStack
 import hoang.dqm.codebase.utils.loadImageSketch
 import hoang.dqm.codebase.utils.singleClick
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Locale
 import java.util.TimeZone
 
 
 class DetailMovieFragment : BaseFragment<FragmentDetailMovieBinding, DetailMovieViewModel>() {
-    private val mainViewModel by activityViewModels <MainViewModel>()
+    private val mainViewModel by activityViewModels<MainViewModel>()
 
     override val viewModelFactory: ViewModelProvider.Factory
         get() = DetailMovieViewModel.DetailViewModelFactory(
@@ -36,20 +47,105 @@ class DetailMovieFragment : BaseFragment<FragmentDetailMovieBinding, DetailMovie
         ActorAdapter()
     }
 
+    private var reviewAdapter: ReviewAdapter? = null
+
     override fun initView() {
         adjustInsetsForBottomNavigation(binding.btnBack)
         viewModel.getMovieDetail(idMovie)
+        viewModel.getAllReview(idMovie)
         setUpAdapter()
         setUpObserver()
+        setUpPost()
     }
 
+    fun setUpPost(){
+        val stars = listOf(binding.star1, binding.star2, binding.star3, binding.star4, binding.star5, binding.star6, binding.star7, binding.star8, binding.star9, binding.star10)
+        var selectedRating = 0
+
+        stars.forEachIndexed { index, star ->
+            star.setOnClickListener {
+                selectedRating = index + 1
+                updateStars(selectedRating, stars)
+            }
+        }
+
+
+
+        binding.btnSubmitReview.singleClick {
+            val text = binding.etComment.text.toString()
+            if (text.length<3){
+                Toast.makeText(requireContext(), "min length is 3", Toast.LENGTH_SHORT).show()
+                return@singleClick
+            }
+            viewModel.addReview(ReviewRequest(selectedRating, binding.etComment.text.toString(), idMovie))
+        }
+    }
+
+    fun updateStars(rating: Int, stars: List<ImageView>) {
+        stars.forEachIndexed { index, star ->
+            star.setImageResource(
+                if (index < rating) android.R.drawable.star_big_on
+                else android.R.drawable.star_big_off
+            )
+        }
+    }
     fun setUpAdapter() {
+        reviewAdapter = ReviewAdapter(idMovie)
+        reviewAdapter?.setOnRemove { idMovie, position ->
+            // remove
+            viewModel.deleteReview(idMovie)
+            val list = this@DetailMovieFragment.reviewAdapter?.dataList
+            list?.removeAt(position)
+            this@DetailMovieFragment.reviewAdapter?.setList(list)
+            binding.bgPostReview.isVisible = !updateHasReviews(list?:emptyList(), mainViewModel.account.value?.id?:"")
+        }
+        binding.rvReview.adapter = reviewAdapter
+        binding.rvReview.layoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+
+
+
         binding.rvActor.adapter = adapterActors
         binding.rvActor.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
     }
 
     fun setUpObserver() {
+        lifecycleScope.launch {
+            viewModel.authEvent.collect {
+                if (it is AuthEvent.RequireLogin) {
+                    Toast.makeText(requireContext(),
+                        getString(R.string.text_please_log_in_to_continue), Toast.LENGTH_LONG).show()
+                    navigate(R.id.loginFragment, isPop = true)
+                }
+            }
+        }
+        lifecycleScope.launchWhenStarted {
+            viewModel.allReview.collect { value ->
+                if (value?.success == true) {
+                    if (value.data == null) return@collect
+                    reviewAdapter?.setList(value.data.items)
+                    binding.bgPostReview.isVisible = !updateHasReviews(value.data.items, mainViewModel.account.value?.id?:"")
+                }
+            }
+        }
+
+        lifecycleScope.launchWhenStarted {
+            viewModel.addReviewResult.collect { value ->
+                if (value?.success == true) {
+                    if (value.data == null) return@collect
+                    viewModel.getAllReview(idMovie)
+                }
+            }
+        }
+
+        mainViewModel.account.observe(viewLifecycleOwner){ value ->
+            if (value== null) {
+                return@observe
+            }
+            reviewAdapter?.setId(value.id)
+        }
+
         viewModel.movieDetailResultLiveData.observe(viewLifecycleOwner) { value ->
             if (value?.success == true) {
                 if (value.data == null) return@observe
@@ -120,6 +216,10 @@ class DetailMovieFragment : BaseFragment<FragmentDetailMovieBinding, DetailMovie
     }
 
     override fun initData() {
+    }
+
+    fun updateHasReviews(list: List<ReviewResponse>, id: String): Boolean{
+        return list.any { it.account.id == id }
     }
 
     fun genresToString(genres: List<GenreResponse>): String {

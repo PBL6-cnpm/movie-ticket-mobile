@@ -24,12 +24,18 @@ class MovieAdapter(var isShowing: Boolean = true) :
         binding.img.loadImageSketch(item.poster)
         binding.tvRate.isVisible = isShowing
         binding.tvAdditional.text = if (isShowing) {
-            if (item.rated != null) "⭐ ${item.rated}/5"
+            if (item.rated != null) "⭐ ${item.rated}/10"
             else context.getString(R.string.text_no_reviews_yet)
         } else convertDayShowing(item.screeningStart!!)
         binding.tvAdditional.isVisible = !isShowing
         binding.tvNameMovie.text = item.name
         binding.tvGenre.text = genresToString(item.genres)
+        if (item.rated != null){
+            binding.tvRate.text =  "⭐ ${item.rated}/10"
+            binding.tvRate.isVisible = true
+        } else {
+            binding.tvRate.isVisible = false
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.O)

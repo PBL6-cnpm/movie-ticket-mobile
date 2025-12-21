@@ -408,6 +408,208 @@
                 </androidx.cardview.widget.CardView>
             </androidx.constraintlayout.widget.ConstraintLayout>
 
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/view_review"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_8sdp"
+                android:background="@color/color_background"
+                android:paddingVertical="@dimen/_8sdp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/view_image_and_video">
+
+                <TextView
+                    android:id="@+id/review_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/baloo2_semibold"
+                    android:text="@string/text_review_t"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_16ssp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.03"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/bg_post_review"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@id/review_title"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:padding="16dp">
+
+                    <ImageView
+                        android:id="@+id/star1"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:src="@android:drawable/star_big_off"
+                        android:clickable="true"
+                        android:focusable="true"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toStartOf="@id/star2"
+                        app:layout_constraintHorizontal_chainStyle="packed"
+                        android:layout_marginTop="4dp"
+                        android:padding="4dp"/>
+
+                    <ImageView
+                        android:id="@+id/star2"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:src="@android:drawable/star_big_off"
+                        android:clickable="true"
+                        android:focusable="true"
+                        app:layout_constraintTop_toTopOf="@id/star1"
+                        app:layout_constraintStart_toEndOf="@id/star1"
+                        app:layout_constraintEnd_toStartOf="@id/star3"
+                        android:padding="4dp"/>
+
+                    <ImageView
+                        android:id="@+id/star3"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:src="@android:drawable/star_big_off"
+                        android:clickable="true"
+                        android:focusable="true"
+                        app:layout_constraintTop_toTopOf="@id/star1"
+                        app:layout_constraintStart_toEndOf="@id/star2"
+                        app:layout_constraintEnd_toStartOf="@id/star4"
+                        android:padding="4dp"/>
+
+                    <ImageView
+                        android:id="@+id/star4"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:src="@android:drawable/star_big_off"
+                        android:clickable="true"
+                        android:focusable="true"
+                        app:layout_constraintTop_toTopOf="@id/star1"
+                        app:layout_constraintStart_toEndOf="@id/star3"
+                        app:layout_constraintEnd_toStartOf="@id/star5"
+                        android:padding="4dp"/>
+
+                    <ImageView
+                        android:id="@+id/star5"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:src="@android:drawable/star_big_off"
+                        android:clickable="true"
+                        android:focusable="true"
+                        app:layout_constraintTop_toTopOf="@id/star1"
+                        app:layout_constraintStart_toEndOf="@id/star4"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        android:padding="4dp"/>
+
+                    <!-- Row 2: Stars 6-10 -->
+                    <ImageView
+                        android:id="@+id/star6"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:src="@android:drawable/star_big_off"
+                        android:clickable="true"
+                        android:focusable="true"
+                        app:layout_constraintTop_toBottomOf="@id/star1"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toStartOf="@id/star7"
+                        app:layout_constraintHorizontal_chainStyle="packed"
+                        android:layout_marginTop="8dp"
+                        android:padding="4dp"/>
+
+                    <ImageView
+                        android:id="@+id/star7"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:src="@android:drawable/star_big_off"
+                        android:clickable="true"
+                        android:focusable="true"
+                        app:layout_constraintTop_toTopOf="@id/star6"
+                        app:layout_constraintStart_toEndOf="@id/star6"
+                        app:layout_constraintEnd_toStartOf="@id/star8"
+                        android:padding="4dp"/>
+
+                    <ImageView
+                        android:id="@+id/star8"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:src="@android:drawable/star_big_off"
+                        android:clickable="true"
+                        android:focusable="true"
+                        app:layout_constraintTop_toTopOf="@id/star6"
+                        app:layout_constraintStart_toEndOf="@id/star7"
+                        app:layout_constraintEnd_toStartOf="@id/star9"
+                        android:padding="4dp"/>
+
+                    <ImageView
+                        android:id="@+id/star9"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:src="@android:drawable/star_big_off"
+                        android:clickable="true"
+                        android:focusable="true"
+                        app:layout_constraintTop_toTopOf="@id/star6"
+                        app:layout_constraintStart_toEndOf="@id/star8"
+                        app:layout_constraintEnd_toStartOf="@id/star10"
+                        android:padding="4dp"/>
+
+                    <ImageView
+                        android:id="@+id/star10"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:src="@android:drawable/star_big_off"
+                        android:clickable="true"
+                        android:focusable="true"
+                        app:layout_constraintTop_toTopOf="@id/star6"
+                        app:layout_constraintStart_toEndOf="@id/star9"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        android:padding="4dp"/>
+
+                    <EditText
+                        android:id="@+id/etComment"
+                        android:layout_width="0dp"
+                        android:layout_height="120dp"
+                        android:hint="Write your comment"
+                        android:gravity="top|start"
+                        android:padding="12dp"
+                        android:background="@android:drawable/edit_text"
+                        android:inputType="textMultiLine"
+                        android:maxLines="5"
+                        app:layout_constraintTop_toBottomOf="@id/star10"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        android:layout_marginTop="8dp"/>
+
+                    <!-- Submit Button -->
+                    <TextView
+                        android:id="@+id/btnSubmitReview"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:text="@string/text_post"
+                        android:textSize="16sp"
+                        android:background="@drawable/shape_bg_enter"
+                        android:textStyle="bold"
+                        android:gravity="center"
+                        android:textColor="@color/white"
+                        android:textAllCaps="true"
+                        android:paddingVertical="@dimen/_15dp"
+                        app:layout_constraintTop_toBottomOf="@id/etComment"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        android:layout_marginTop="24dp"/>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_review"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    tools:listitem="@layout/list_item_review"
+                    app:layout_constraintTop_toBottomOf="@id/bg_post_review"
+                    app:layout_constraintBottom_toBottomOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 

@@ -109,4 +109,6 @@
     <string name="text_select">Select</string>
     <string name="text_please_log_in_to_continue">Please log in to continue</string>
     <string name="text_this_movie_isn_t_available_yet_please_check_back_soon">This movie isn’t available yet. Please check back soon.</string>
+    <string name="text_review_t">Audience Reviews</string>
+    <string name="text_post">Post Review</string>
 </resources>
