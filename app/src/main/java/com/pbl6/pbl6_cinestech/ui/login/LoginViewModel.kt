@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.pbl6.pbl6_cinestech.data.model.request.GoogleLoginToken
 import com.pbl6.pbl6_cinestech.data.model.response.LoginResponse
 import com.pbl6.pbl6_cinestech.data.model.response.Response
 import com.pbl6.pbl6_cinestech.data.repository.AuthRepository
@@ -19,6 +20,24 @@ class LoginViewModel(
     private val _loginResult = MutableLiveData<Response<LoginResponse>?>(null)
     val loginResultLiveData: LiveData<Response<LoginResponse>?> = _loginResult
 
+    fun loginWithGoogle(googleToken: String) {
+        try {
+            viewModelScope.launch {
+                val response = authRepository.loginWithGoogle(GoogleLoginToken(googleToken))
+                _loginResult.value = response
+            }
+        }catch (e: Exception) {
+            Log.e("LoginViewModel", "Login error: ${e.message}", e)
+            _loginResult.value = Response(
+                success = false,
+                statusCode = 400,
+                message = "Invalid credentials",
+                code = "INVALID_CREDENTIALS",
+                data = null
+            )
+        }
+
+    }
 
     fun login(email: String, password: String) {
         viewModelScope.launch {

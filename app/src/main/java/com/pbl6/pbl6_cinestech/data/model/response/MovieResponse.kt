@@ -1,6 +1,6 @@
 package com.pbl6.pbl6_cinestech.data.model.response
 
-class MovieResponse(
+data class MovieResponse(
     var id: String,
     var name: String,
     var description: String,
@@ -17,6 +17,6 @@ class MovieResponse(
     var rated: Int?,
     var createdAt: String,
     var updatedAt: String,
-    reviews: List<ReviewResponse>
+    val reviews: List<ReviewResponse>
 ) {
 }

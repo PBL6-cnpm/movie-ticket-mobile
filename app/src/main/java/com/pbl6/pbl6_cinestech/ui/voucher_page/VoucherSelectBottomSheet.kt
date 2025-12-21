@@ -23,9 +23,7 @@ import hoang.dqm.codebase.utils.singleClick
 class VoucherSelectBottomSheet(val currentPrice: Int) : BottomSheetDialogFragment() {
     private val mainViewModel by activityViewModels <MainViewModel>()
 
-    private val adapter: VoucherAdapter by lazy {
-        VoucherAdapter()
-    }
+    private var adapter: VoucherAdapter? = null
 
     private val viewModel: VoucherViewModel by lazy {
         val factory = VoucherViewModel.VoucherViewModelFactory(
@@ -66,6 +64,7 @@ class VoucherSelectBottomSheet(val currentPrice: Int) : BottomSheetDialogFragmen
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        adapter = VoucherAdapter(currentPrice)
         initListener()
         viewModel.getAllVoucher()
         setUpAdapter()
@@ -74,13 +73,14 @@ class VoucherSelectBottomSheet(val currentPrice: Int) : BottomSheetDialogFragmen
     }
 
     fun setUpAdapter(){
-        adapter.setOnClickItem{ position ->
-            val itemSelected = adapter.getItem(position)
+        adapter?.setOnClickItem{ position ->
+            val itemSelected = adapter?.getItem(position)
+            if (itemSelected ==null) return@setOnClickItem
             if ((itemSelected.minimumOrderValue ?: 0) > currentPrice){
                 Toast.makeText(requireContext(), "The voucher is only applicable to orders from ${itemSelected.minimumOrderValue}k.", Toast.LENGTH_SHORT).show()
                 return@setOnClickItem
             }
-            adapter.setItemSelected(position)
+            adapter?.setItemSelected(position)
             updateUi(itemSelected)
         }
 
@@ -94,14 +94,14 @@ class VoucherSelectBottomSheet(val currentPrice: Int) : BottomSheetDialogFragmen
 
     fun initListener(){
         binding.btnApplyVoucher.singleClick {
-            val itemSelected = this@VoucherSelectBottomSheet.adapter.getItemSelected()
+            val itemSelected = this@VoucherSelectBottomSheet.adapter?.getItemSelected()
             if (itemSelected==null) return@singleClick
             mainViewModel.setVoucherSelected(itemSelected)
             dismiss()
         }
 
         binding.btnBack.singleClick {
-            mainViewModel.setVoucherSelected(this@VoucherSelectBottomSheet.adapter.getItemSelected())
+            mainViewModel.setVoucherSelected(this@VoucherSelectBottomSheet.adapter?.getItemSelected())
             dismiss()
         }
     }
@@ -110,7 +110,7 @@ class VoucherSelectBottomSheet(val currentPrice: Int) : BottomSheetDialogFragmen
         viewModel.allVoucherLiveData.observe(viewLifecycleOwner){ value ->
             if (value?.success == true){
                 if (value?.data == null) return@observe
-                adapter.setList(value.data)
+                adapter?.setList(value.data)
             }
         }
     }
@@ -122,7 +122,7 @@ class VoucherSelectBottomSheet(val currentPrice: Int) : BottomSheetDialogFragmen
                 formatVND(
                     (currentPrice * voucherResponse.discountPercent!! / 100).coerceIn(
                         0,
-                        voucherResponse.minimumOrderValue
+                        voucherResponse.maxDiscountValue
                     ).toLong()
                 )
             )

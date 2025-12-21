@@ -14,5 +14,10 @@ class BranchRepository(
     suspend fun getBranchWithMovieId(movieId: String): Response<BranchResponse> {
         return branchApiService.getBranchWithMovieId(movieId)
     }
+
+    suspend fun getBranchesWithMovieId(movieId: String): Response<List<BranchResponse>> {
+        return branchApiService.getBranchesWithMovieId(movieId)
+    }
+
 }
 

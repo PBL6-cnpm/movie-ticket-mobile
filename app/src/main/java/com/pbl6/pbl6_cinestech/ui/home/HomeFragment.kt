@@ -15,6 +15,7 @@ import com.pbl6.pbl6_cinestech.ui.main.MainViewModel
 import com.pbl6.pbl6_cinestech.utils.SecurePrefs
 import hoang.dqm.codebase.base.activity.BaseFragment
 import hoang.dqm.codebase.base.activity.navigate
+import hoang.dqm.codebase.base.activity.onBackPressed
 import hoang.dqm.codebase.data.ItemList
 import hoang.dqm.codebase.utils.loadImageSketch
 import hoang.dqm.codebase.utils.singleClick
@@ -72,6 +73,11 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>() {
             val movieSelected = this@HomeFragment.adapterUpComing.getItem(position)
             if (movieSelected is ItemList.DataItem<MovieResponse>) {
                 val realItem = movieSelected.item
+                val bundle = Bundle().apply {
+                    putString("movieId", realItem.id)
+                }
+                mainViewModel.setMovieSelected(realItem)
+                navigate(R.id.detailMovieFragment, bundle)
                 // navigate detail
             } else {
                 // navigate list movie
@@ -157,6 +163,9 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>() {
     }
 
     override fun initListener() {
+        onBackPressed {
+
+        }
         binding.btnLogin.singleClick {
             navigate(R.id.loginFragment)
         }
@@ -174,7 +183,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>() {
             mainViewModel.setLogin(false)
             mainViewModel.setAccount(null)
             SecurePrefs.clear(requireContext())
-            navigate(R.id.loginFragment)
+            navigate(R.id.homeFragment, isPop = true)
         }
     }
 

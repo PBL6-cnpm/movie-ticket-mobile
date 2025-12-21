@@ -3,6 +3,7 @@ package com.pbl6.pbl6_cinestech.data.repository
 import android.util.Log
 import com.pbl6.pbl6_cinestech.data.api.AuthApiService
 import com.pbl6.pbl6_cinestech.data.model.request.ForgotPasswordRequest
+import com.pbl6.pbl6_cinestech.data.model.request.GoogleLoginToken
 import com.pbl6.pbl6_cinestech.data.model.request.LoginRequest
 import com.pbl6.pbl6_cinestech.data.model.request.RegisterRequest
 import com.pbl6.pbl6_cinestech.data.model.response.AccountResponse
@@ -25,6 +26,10 @@ class AuthRepository(
     suspend fun login(email: String, password: String): Response<LoginResponse> {
         val request = LoginRequest(email, password)
         return authApiService.login(request)
+    }
+
+    suspend fun loginWithGoogle(googleToken: GoogleLoginToken): Response<LoginResponse> {
+        return authApiService.loginWithGoogle(googleToken)
     }
 
     suspend fun forgotPassword(email: String): Response<Nothing> {

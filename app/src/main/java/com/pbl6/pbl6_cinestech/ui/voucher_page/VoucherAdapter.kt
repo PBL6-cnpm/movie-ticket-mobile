@@ -8,7 +8,7 @@ import com.pbl6.pbl6_cinestech.databinding.ItemVoucherBinding
 import hoang.dqm.codebase.base.adapter.BaseRecyclerViewAdapter
 import hoang.dqm.codebase.utils.singleClick
 
-class VoucherAdapter : BaseRecyclerViewAdapter<VoucherResponse, ItemVoucherBinding>() {
+class VoucherAdapter(val currentPrice: Int) : BaseRecyclerViewAdapter<VoucherResponse, ItemVoucherBinding>() {
     private var itemSelected: Int? = null
     fun setItemSelected(position: Int) {
         val oldValue = itemSelected
@@ -39,6 +39,12 @@ class VoucherAdapter : BaseRecyclerViewAdapter<VoucherResponse, ItemVoucherBindi
         binding.inforMessage.text =
             if (item.minimumOrderValue != null && item.minimumOrderValue != 0) "The voucher is only applicable to orders from ${item.minimumOrderValue}k."
             else "This voucher is valid for all purchases."
+        binding.informationVoucher.text = "Minimum order required: ${item.minimumOrderValue}k"
+        if (item.minimumOrderValue != null  && item.minimumOrderValue != 0 && currentPrice < (item.minimumOrderValue?:0)){
+            binding.informationVoucher.visibility = View.VISIBLE
+        } else {
+            binding.informationVoucher.visibility = View.GONE
+        }
     }
 
     fun setOnClickItem(listener: (position: Int) -> Unit) {

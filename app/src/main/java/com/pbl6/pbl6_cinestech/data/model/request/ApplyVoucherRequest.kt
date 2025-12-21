@@ -1,6 +1,6 @@
 package com.pbl6.pbl6_cinestech.data.model.request
 
-class ApplyVoucherRequest(
+data class ApplyVoucherRequest(
     var bookingId: String,
     var code: String
 ) {

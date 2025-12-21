@@ -39,7 +39,7 @@ class BookingHistoryAdapter: BaseRecyclerViewAdapter<BookingHistoryResponse, Ite
     fun getDayMonthYearWithWeekday(isoString: String): String {
         val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX", Locale.getDefault())
         val date = inputFormat.parse(isoString)
-        val outputFormat = SimpleDateFormat("EEEE, dd/MM/yyyy", Locale.getDefault())
+        val outputFormat = SimpleDateFormat("EEEE, dd/MM/yyyy - HH:mm", Locale.getDefault())
         return outputFormat.format(date!!)
     }
 

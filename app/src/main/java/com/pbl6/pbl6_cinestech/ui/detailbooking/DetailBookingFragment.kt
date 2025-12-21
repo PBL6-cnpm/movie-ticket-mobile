@@ -3,11 +3,16 @@ package com.pbl6.pbl6_cinestech.ui.detailbooking
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.view.View
+import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.pbl6.pbl6_cinestech.R
+import com.pbl6.pbl6_cinestech.data.model.request.AuthEvent
 import com.pbl6.pbl6_cinestech.data.model.response.CinemaShowTime
 import com.pbl6.pbl6_cinestech.data.model.response.DayOfWeek
 import com.pbl6.pbl6_cinestech.data.repository.RepositoryProvider
@@ -15,8 +20,11 @@ import com.pbl6.pbl6_cinestech.databinding.FragmentDetailBookingBinding
 import com.pbl6.pbl6_cinestech.ui.main.MainViewModel
 import hoang.dqm.codebase.base.activity.BaseFragment
 import hoang.dqm.codebase.base.activity.navigate
+import hoang.dqm.codebase.base.activity.onBackPressed
 import hoang.dqm.codebase.base.activity.popBackStack
 import hoang.dqm.codebase.utils.singleClick
+import kotlinx.coroutines.launch
+import java.time.Instant
 import java.time.LocalDate
 import java.time.OffsetDateTime
 import java.time.ZoneId
@@ -25,7 +33,7 @@ import java.util.Locale
 
 
 class DetailBookingFragment : BaseFragment<FragmentDetailBookingBinding, DetailBookingViewModel>() {
-    private val mainViewModel by activityViewModels <MainViewModel>()
+    private val mainViewModel by activityViewModels<MainViewModel>()
     override val viewModelFactory: ViewModelProvider.Factory
         get() = DetailBookingViewModel.DetailBookingViewModelFactory(
             RepositoryProvider.movieRepository,
@@ -49,14 +57,16 @@ class DetailBookingFragment : BaseFragment<FragmentDetailBookingBinding, DetailB
 
 
     private val cinemasShowTimeAdapter: CinemaShowTimeAdapter by lazy {
-        CinemaShowTimeAdapter(duration?:0, {idShowTime, time ->
+        CinemaShowTimeAdapter(duration ?: 0, { idShowTime, time ->
             val bundle = Bundle().apply {
                 putString("idShowTime", idShowTime)
-                putString("branchName",
+                putString(
+                    "branchName",
                     this@DetailBookingFragment.adapterBranch.getSelectedBranch().name
                 )
                 putString("dayValue", this@DetailBookingFragment.timeAdapter.getDaySelected().value)
                 putString("timeStart", time)
+                putInt("duration", duration?:0)
             }
             mainViewModel.setBranchSelected(this@DetailBookingFragment.adapterBranch.getSelectedBranch())
             navigate(R.id.seatBookingFragment, bundle)
@@ -66,9 +76,14 @@ class DetailBookingFragment : BaseFragment<FragmentDetailBookingBinding, DetailB
     @RequiresApi(Build.VERSION_CODES.O)
     override fun initView() {
         adjustInsetsForBottomNavigation(binding.btnBack)
+        binding.lottieLoading.isVisible = true
+        binding.lottieLoading.playAnimation()
 //        movieId?.let {
 //            viewModel.getBranchWithMovieId(it)
 //        }
+        movieId?.let {
+            viewModel.getAllBranchesWithMovieId(it)
+        }
         setUpAdapter()
         setUpObserver()
     }
@@ -79,19 +94,33 @@ class DetailBookingFragment : BaseFragment<FragmentDetailBookingBinding, DetailB
             this@DetailBookingFragment.timeAdapter.setSelected(position)
             // query showtime
             viewModel.showTimeResponseLiveData.value?.let { value ->
-                val showTime = value.data?.items?.find { it -> isSameDayVN(it.dayOfWeek.value, this@DetailBookingFragment.timeAdapter.getDaySelected().value) }
+                val showTime = value.data?.items?.find { it ->
+                    isSameDayVN(
+                        it.dayOfWeek.value,
+                        this@DetailBookingFragment.timeAdapter.getDaySelected().value
+                    )
+                }
                 showTime?.let {
-                    cinemasShowTimeAdapter.setList(mutableListOf(CinemaShowTime(this@DetailBookingFragment.adapterBranch.getSelectedBranch(), showTime)))
-                }?: run {
+                    cinemasShowTimeAdapter.setList(
+                        mutableListOf(
+                            CinemaShowTime(
+                                this@DetailBookingFragment.adapterBranch.getSelectedBranch(),
+                                showTime
+                            )
+                        )
+                    )
+                    binding.icShowNoShowTime.isVisible = false
+                    mainViewModel.setShowTimeResponse(showTime)
+                } ?: run {
                     cinemasShowTimeAdapter.setList(emptyList())
+                    binding.icShowNoShowTime.isVisible = true
                 }
             }
-
-
         }
 
         binding.rvShowTimeDay.adapter = timeAdapter
-        binding.rvShowTimeDay.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        binding.rvShowTimeDay.layoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         timeAdapter.setList(generateNext14Days())
 
         adapterBranch.setOnClickItem { position ->
@@ -106,9 +135,9 @@ class DetailBookingFragment : BaseFragment<FragmentDetailBookingBinding, DetailB
         binding.rvBranch.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
 
-        cinemasShowTimeAdapter.setOnClickItem( { position ->
+        cinemasShowTimeAdapter.setOnClickItem({ position ->
 
-        }){ address ->
+        }) { address ->
             val bundle = Bundle().apply {
                 putString("address", address)
             }
@@ -120,44 +149,120 @@ class DetailBookingFragment : BaseFragment<FragmentDetailBookingBinding, DetailB
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun setUpObserver() {
-        viewModel.branchBookingResultLiveData.observe(viewLifecycleOwner) { value ->
-            if (value?.success == true) {
-
+//        viewModel.branchBookingResultLiveData.observe(viewLifecycleOwner) { value ->
+//            if (value?.success == true) {
+//                if (value.data == null) return@observe
+//            }
+//
+//        }
+        lifecycleScope.launch {
+            viewModel.authEvent.collect {
+                if (it is AuthEvent.RequireLogin) {
+                    Toast.makeText(requireContext(),
+                        getString(R.string.text_please_log_in_to_continue), Toast.LENGTH_LONG).show()
+                    navigate(R.id.loginFragment, isPop = true)
+                }
             }
-
         }
 
         viewModel.allBranchResultLiveData.observe(viewLifecycleOwner) { value ->
             if (value?.success == true) {
                 if (value.data == null) return@observe
-                adapterBranch.setList(value.data.sortedBy { if (it.name == "Cines Center") 0 else 1 })
-                movieId?.let {
-                    viewModel.getShowTimeWithBranchAndMovie(it, adapterBranch.getSelectedBranch().id)
-                }
+                adapterBranch.setList(value.data)
+                Log.d("DETAIL_MOVIE", "call show time ${value.data}")
+                if (value.data.isEmpty()){
+                    binding.lottieLoading.visibility = View.GONE
+                    binding.commingSoon.visibility = View.VISIBLE
 
+                }else{
+                    binding.commingSoon.visibility = View.GONE
+                    movieId?.let {
+                        viewModel.getShowTimeWithBranchAndMovie(
+                            it,
+                            adapterBranch.getSelectedBranch().id
+                        )
+                    }
+                }
             }
         }
 
         viewModel.showTimeResponseLiveData.observe(viewLifecycleOwner) { value ->
             if (value?.success == true) {
-                if (value.data!=null && !value.data.items.isEmpty()){
-                    val showTime = value.data.items.find { it -> isSameDayVN(it.dayOfWeek.value, this@DetailBookingFragment.timeAdapter.getDaySelected().value) }
-                    showTime?.let {
-
-                        cinemasShowTimeAdapter.setList(mutableListOf(CinemaShowTime(this@DetailBookingFragment.adapterBranch.getSelectedBranch(), showTime)))
-                    }?:run {
-                        cinemasShowTimeAdapter.setList(emptyList())
+                    binding.lottieLoading.visibility = View.GONE
+                if (value.data != null && !value.data.items.isEmpty()) {
+                    val showTime = value.data.items.find { it ->
+                        isSameDayVN(
+                            it.dayOfWeek.value,
+                            this@DetailBookingFragment.timeAdapter.getDaySelected().value
+                        )
                     }
-                }else{
+                    // update list has showtime
+                    val listDayOfShowTimeInList =
+                        value.data.items.map { it -> it.dayOfWeek.value }
+                            .map { it -> convertUtcToVietnamIso(it) }
+                    Log.d("listDayOfShowTimeInList", listDayOfShowTimeInList.toString())
+                    Log.d("check no movie", "bindData: ${listDayOfShowTimeInList}")
+                    this@DetailBookingFragment.timeAdapter.setListDay(listDayOfShowTimeInList)
+                    showTime?.let {
+                        cinemasShowTimeAdapter.setList(
+                            mutableListOf(
+                                CinemaShowTime(
+                                    this@DetailBookingFragment.adapterBranch.getSelectedBranch(),
+                                    showTime
+                                )
+                            )
+                        )
+                        binding.icShowNoShowTime.isVisible = false
+                        mainViewModel.setShowTimeResponse(showTime)
+                    } ?: run {
+                        cinemasShowTimeAdapter.setList(emptyList())
+                        binding.icShowNoShowTime.isVisible = true
+                    }
+                } else {
                     cinemasShowTimeAdapter.setList(emptyList())
+                    binding.icShowNoShowTime.isVisible = true
 
                 }
             }
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun initListener() {
+        binding.btnGoDraw.singleClick {
+            popBackStack(R.id.homeFragment)
+        }
         binding.btnBack.singleClick { popBackStack() }
+        onBackPressed {
+            popBackStack()
+        }
+        binding.btnFindShow.singleClick {
+            val itemSelected = timeAdapter.goToDayHasShowTime()
+            if (itemSelected == -1) return@singleClick
+            viewModel.showTimeResponseLiveData.value?.let { value ->
+                val showTime = value.data?.items?.find { it ->
+                    isSameDayVN(
+                        it.dayOfWeek.value,
+                        this@DetailBookingFragment.timeAdapter.getDaySelected().value
+                    )
+                }
+                showTime?.let {
+                    cinemasShowTimeAdapter.setList(
+                        mutableListOf(
+                            CinemaShowTime(
+                                this@DetailBookingFragment.adapterBranch.getSelectedBranch(),
+                                showTime
+                            )
+                        )
+                    )
+                    binding.icShowNoShowTime.isVisible = false
+                    mainViewModel.setShowTimeResponse(showTime)
+                } ?: run {
+                    cinemasShowTimeAdapter.setList(emptyList())
+                    binding.icShowNoShowTime.isVisible = true
+                }
+            }
+        }
     }
 
     override fun initData() {
@@ -225,5 +330,20 @@ class DetailBookingFragment : BaseFragment<FragmentDetailBookingBinding, DetailB
             .toLocalDate()
 
         return d1 == d2
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun convertUtcToVietnamIso(utcString: String): String {
+        val vietnamZone = ZoneId.of("Asia/Ho_Chi_Minh")
+
+        val isoFormatter = DateTimeFormatter.ofPattern(
+            "yyyy-MM-dd'T'HH:mm:ss.SSSXXX"
+        )
+
+        val instant = Instant.parse(utcString)
+
+        val dateTimeVN = instant.atZone(vietnamZone)
+
+        return dateTimeVN.format(isoFormatter)
     }
 }
