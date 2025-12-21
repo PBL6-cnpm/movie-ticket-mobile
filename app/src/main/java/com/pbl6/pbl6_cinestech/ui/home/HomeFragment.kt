@@ -73,6 +73,11 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>() {
             val movieSelected = this@HomeFragment.adapterUpComing.getItem(position)
             if (movieSelected is ItemList.DataItem<MovieResponse>) {
                 val realItem = movieSelected.item
+                val bundle = Bundle().apply {
+                    putString("movieId", realItem.id)
+                }
+                mainViewModel.setMovieSelected(realItem)
+                navigate(R.id.detailMovieFragment, bundle)
                 // navigate detail
             } else {
                 // navigate list movie
@@ -178,7 +183,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>() {
             mainViewModel.setLogin(false)
             mainViewModel.setAccount(null)
             SecurePrefs.clear(requireContext())
-            navigate(R.id.loginFragment)
+            navigate(R.id.homeFragment, isPop = true)
         }
     }
 

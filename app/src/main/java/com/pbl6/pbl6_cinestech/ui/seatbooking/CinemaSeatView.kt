@@ -14,7 +14,6 @@ import android.graphics.Shader
 import android.graphics.Typeface
 import android.os.Build
 import android.util.AttributeSet
-import android.util.Log
 import android.view.MotionEvent
 import android.view.ScaleGestureDetector
 import android.view.View
@@ -36,6 +35,9 @@ class CinemaSeatView @JvmOverloads constructor(
     private var cols = 0
     private var seats = mutableListOf<Seat>()
     private val selectedSeats = mutableSetOf<String>()
+
+    // Track max seats per row for centering
+    private var maxSeatsInRow = 0
 
     // Drawing properties
     private var seatSize = 80f
@@ -109,7 +111,6 @@ class CinemaSeatView @JvmOverloads constructor(
         color = Color.parseColor("#FFD700")
     }
 
-    // Occupied seat paints - Improved design
     private val occupiedPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         color = Color.parseColor("#95A5A6")
         style = Paint.Style.FILL
@@ -195,17 +196,21 @@ class CinemaSeatView @JvmOverloads constructor(
             seat.isOccupied = occupiedSeats.contains(seat.id)
         }
 
-        // Calculate grid dimensions
-        gridWidth = cols + 2 + (cols / 4).toInt()
-        gridHeight = rows.size + 4
+        // Calculate max seats in any row
+        maxSeatsInRow = rows.maxOfOrNull { rowLabel ->
+            seats.count { it.name.startsWith(rowLabel) }
+        } ?: cols
 
-        if (width>0 && height>0){
-            seatSize = (minOf(width.toFloat() / gridWidth, height.toFloat() / gridHeight) * 0.8).toFloat()
+        // Calculate grid dimensions based on max seats per row
+        gridWidth = maxSeatsInRow + 6
+        gridHeight = rows.size + 6
+
+        if (width > 0 && height > 0) {
+            seatSize = (minOf(width.toFloat() / gridWidth, height.toFloat() / gridHeight) * 0.8f)
             rowLabelWidth = seatSize * 1.2f
         }
         invalidate()
     }
-
 
     fun resetZoomPan() {
         if (isAnimating) return
@@ -257,17 +262,15 @@ class CinemaSeatView @JvmOverloads constructor(
     private fun updateGridBounds() {
         gridBounds.set(0f, 0f, gridWidth * seatSize, gridHeight * seatSize)
         matrix.mapRect(gridBounds)
-        viewBounds.set(0f, 0f, width.toFloat(), height*0.6f)
-        Log.d("onSizeChanged", "onSizeChanged gridboud: ${width.toFloat()-(gridWidth*seatSize)} ${height.toFloat()-(gridHeight*seatSize)}")
+        viewBounds.set(0f, 0f, width.toFloat(), height * 0.6f)
     }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
         if (w > 0 && h > 0 && gridWidth > 0 && gridHeight > 0) {
-            seatSize = (minOf(w.toFloat() / gridWidth, h.toFloat() / gridHeight) * 0.8).toFloat()
+            seatSize = (minOf(w.toFloat() / gridWidth, h.toFloat() / gridHeight) * 0.8f)
             rowLabelWidth = seatSize * 1.2f
         }
-
     }
 
     private fun constrainPan() {
@@ -298,7 +301,7 @@ class CinemaSeatView @JvmOverloads constructor(
                 adjustY = (viewBounds.height() - extraPanSpace) - gridBounds.bottom
             }
         }
-        Log.d("onSizeChanged", "constrainPan: $adjustX $adjustY $extraPanSpace ${gridBounds.height()} ${viewBounds.height()}")
+
         if (adjustX != 0f || adjustY != 0f) {
             matrix.postTranslate(adjustX, adjustY)
         }
@@ -307,16 +310,13 @@ class CinemaSeatView @JvmOverloads constructor(
     private inner class ScaleListener : ScaleGestureDetector.SimpleOnScaleGestureListener() {
         override fun onScale(detector: ScaleGestureDetector): Boolean {
             scale *= detector.scaleFactor
-
             scale = max(minScale, min(scale, maxScale))
 
             val focusX = detector.focusX
             val focusY = detector.focusY
 
             matrix.postScale(detector.scaleFactor, detector.scaleFactor, focusX, focusY)
-
             constrainPan()
-
             zoomChangeListener?.onZoomChanged(getZoomLevel())
 
             invalidate()
@@ -331,19 +331,16 @@ class CinemaSeatView @JvmOverloads constructor(
         when (event.actionMasked) {
             MotionEvent.ACTION_DOWN -> {
                 activePointerId = event.getPointerId(0)
-
                 savedMatrix.set(matrix)
                 start.set(event.x, event.y)
                 lastFocusX = event.x
                 lastFocusY = event.y
-
                 lastMoveX = event.x
                 lastMoveY = event.y
-
                 isSingleFingerPanning = false
                 isTappingMode = false
 
-                if (!scaleGestureDetector.isInProgress){
+                if (!scaleGestureDetector.isInProgress) {
                     val touchPoint = getTouchPoint(event.x, event.y)
                     val seatTapped = isTouchingSeat(touchPoint[0], touchPoint[1])
                     if (seatTapped) {
@@ -375,7 +372,6 @@ class CinemaSeatView @JvmOverloads constructor(
                     isTappingMode = false
                 }
 
-                // Xử lý pan giống TapPuzzleView
                 if (pointerCount >= 2 && Build.VERSION.SDK_INT < Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
                     if (!scaleGestureDetector.isInProgress) {
                         val dx = x - lastFocusX
@@ -419,16 +415,25 @@ class CinemaSeatView @JvmOverloads constructor(
         return true
     }
 
+    // Calculate centered X position for a seat in a row
+    private fun calculateCenteredSeatX(seatCountInRow: Int, seatIndexInRow: Int): Float {
+        val maxRowWidth = maxSeatsInRow * (seatSize + seatSpacing) - seatSpacing
+        val currentRowWidth = seatCountInRow * (seatSize + seatSpacing) - seatSpacing
+        val offsetX = (maxRowWidth - currentRowWidth) / 2f
+
+        return rowLabelWidth + offsetX + seatIndexInRow * (seatSize + seatSpacing)
+    }
+
     private fun isTouchingSeat(x: Float, y: Float): Boolean {
         val startY = screenMargin + screenHeight + seatSpacing * 2
 
         rows.forEachIndexed { rowIndex, rowLabel ->
             val rowY = startY + rowIndex * (seatSize + seatSpacing)
             val rowSeats = seats.filter { it.name.startsWith(rowLabel) }
+                .sortedBy { it.name.substring(1).toIntOrNull() ?: 0 }
 
-            rowSeats.forEach { seat ->
-                val colNumber = seat.name.substring(1).toIntOrNull() ?: 0
-                val seatX = rowLabelWidth + (colNumber - 1) * (seatSize + seatSpacing)
+            rowSeats.forEachIndexed { seatIndex, seat ->
+                val seatX = calculateCenteredSeatX(rowSeats.size, seatIndex)
                 val rect = RectF(seatX, rowY, seatX + seatSize, rowY + seatSize)
 
                 if (rect.contains(x, y)) {
@@ -455,10 +460,8 @@ class CinemaSeatView @JvmOverloads constructor(
             val rowSeats = seats.filter { it.name.startsWith(rowLabel) }
                 .sortedBy { it.name.substring(1).toIntOrNull() ?: 0 }
 
-            rowSeats.forEach { seat ->
-                val colNumber = seat.name.substring(1).toIntOrNull() ?: 0
-                val seatX = rowLabelWidth + (colNumber - 1) * (seatSize + seatSpacing)
-
+            rowSeats.forEachIndexed { seatIndex, seat ->
+                val seatX = calculateCenteredSeatX(rowSeats.size, seatIndex)
                 val rect = RectF(seatX, rowY, seatX + seatSize, rowY + seatSize)
 
                 if (rect.contains(x, y) && !seat.isOccupied) {
@@ -500,7 +503,7 @@ class CinemaSeatView @JvmOverloads constructor(
     }
 
     private fun drawScreen(canvas: Canvas) {
-        val screenWidth = (cols * (seatSize + seatSpacing)) - seatSpacing + rowLabelWidth
+        val screenWidth = (maxSeatsInRow * (seatSize + seatSpacing)) - seatSpacing + rowLabelWidth
         val screenRect = RectF(
             rowLabelWidth,
             0f,
@@ -545,20 +548,22 @@ class CinemaSeatView @JvmOverloads constructor(
             val rowSeats = seats.filter { it.name.startsWith(rowLabel) }
                 .sortedBy { it.name.substring(1).toIntOrNull() ?: 0 }
 
+            var skipNext = false
             rowSeats.forEachIndexed { seatIndex, seat ->
-                val colNumber = seat.name.substring(1).toIntOrNull() ?: (seatIndex + 1)
-                val x = rowLabelWidth + (colNumber - 1) * (seatSize + seatSpacing)
-
-                if (rowIndex == 0) {
-                    canvas.drawText(
-                        colNumber.toString(),
-                        x + seatSize / 2,
-                        startY - seatSpacing,
-                        colLabelPaint
-                    )
+                if (skipNext) {
+                    skipNext = false
+                    return@forEachIndexed
                 }
 
-                drawSeat(canvas, seat, x, y)
+                val isCoupleSeat = seat.type.name.contains("Couple", ignoreCase = true)
+
+                val seatX = calculateCenteredSeatX(rowSeats.size, seatIndex)
+                drawSeat(canvas, seat, seatX, y)
+
+                // If this is a couple seat, skip the next position
+                if (isCoupleSeat) {
+                    skipNext = true
+                }
             }
         }
     }
@@ -567,124 +572,263 @@ class CinemaSeatView @JvmOverloads constructor(
         val rect = RectF(x, y, x + seatSize, y + seatSize)
 
         if (seat.isOccupied) {
-            // Draw occupied seat with improved design
-            drawOccupiedSeat(canvas, rect, x, y)
+            drawOccupiedSeat(canvas, rect, x, y, seat)
         } else {
-            seatPaint.color = Color.parseColor(seat.type.color)
-            canvas.drawRoundRect(rect, 12f, 12f, seatPaint)
-            canvas.drawRoundRect(rect, 12f, 12f, seatStrokePaint)
+            // Check if this is a couple seat (type name contains "Couple" or similar identifier)
+            val isCoupleSeat = seat.type.name.contains("Couple", ignoreCase = true)
 
-            if (seat.isSelected) {
-                canvas.drawRoundRect(rect, 12f, 12f, selectedStrokePaint)
-
-                val checkPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-                    color = Color.parseColor("#FFD700")
-                    strokeWidth = 5f
-                    style = Paint.Style.STROKE
-                    strokeCap = Paint.Cap.ROUND
-                }
-                val cx = x + seatSize / 2
-                val cy = y + seatSize / 2
-                val size = seatSize * 0.3f
-
-                val path = Path().apply {
-                    moveTo(cx - size / 2, cy)
-                    lineTo(cx - size / 6, cy + size / 2)
-                    lineTo(cx + size / 2, cy - size / 3)
-                }
-                canvas.drawPath(path, checkPaint)
+            if (isCoupleSeat) {
+                drawCoupleSeat(canvas, seat, x, y)
+            } else {
+                drawNormalSeat(canvas, seat, x, y)
             }
-
-            val legPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-                color = Color.parseColor("#ECF0F1")
-                strokeWidth = 3f
-                style = Paint.Style.STROKE
-            }
-            val legHeight = 8f
-            canvas.drawLine(x + 15f, y + seatSize, x + 15f, y + seatSize + legHeight, legPaint)
-            canvas.drawLine(
-                x + seatSize - 15f,
-                y + seatSize,
-                x + seatSize - 15f,
-                y + seatSize + legHeight,
-                legPaint
-            )
         }
     }
 
-    private fun drawOccupiedSeat(canvas: Canvas, rect: RectF, x: Float, y: Float) {
-        // Draw main seat body with gradient
+    private fun drawNormalSeat(canvas: Canvas, seat: Seat, x: Float, y: Float) {
+        val rect = RectF(x, y, x + seatSize, y + seatSize)
+
+        seatPaint.color = Color.parseColor(seat.type.color)
+        canvas.drawRoundRect(rect, 12f, 12f, seatPaint)
+        canvas.drawRoundRect(rect, 12f, 12f, seatStrokePaint)
+
+        if (seat.isSelected) {
+            canvas.drawRoundRect(rect, 12f, 12f, selectedStrokePaint)
+
+            val checkPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+                color = Color.parseColor("#FFD700")
+                strokeWidth = 5f
+                style = Paint.Style.STROKE
+                strokeCap = Paint.Cap.ROUND
+            }
+            val cx = x + seatSize / 2
+            val cy = y + seatSize / 2
+            val size = seatSize * 0.3f
+
+            val path = Path().apply {
+                moveTo(cx - size / 2, cy)
+                lineTo(cx - size / 6, cy + size / 2)
+                lineTo(cx + size / 2, cy - size / 3)
+            }
+            canvas.drawPath(path, checkPaint)
+        }
+
+        // Draw seat number
+        val seatNumberPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+            color = Color.WHITE
+            textSize = seatSize * 0.35f
+            textAlign = Paint.Align.CENTER
+            typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
+        }
+        val seatNumber = seat.name.substring(1)
+        canvas.drawText(
+            seatNumber,
+            x + seatSize / 2,
+            y + seatSize / 2 + seatNumberPaint.textSize / 3,
+            seatNumberPaint
+        )
+
+        // Draw legs
+        val legPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+            color = Color.parseColor("#ECF0F1")
+            strokeWidth = 3f
+            style = Paint.Style.STROKE
+        }
+        val legHeight = 8f
+        canvas.drawLine(x + 15f, y + seatSize, x + 15f, y + seatSize + legHeight, legPaint)
+        canvas.drawLine(
+            x + seatSize - 15f,
+            y + seatSize,
+            x + seatSize - 15f,
+            y + seatSize + legHeight,
+            legPaint
+        )
+    }
+
+    private fun drawCoupleSeat(canvas: Canvas, seat: Seat, x: Float, y: Float) {
+        // Couple seat occupies 2 seat slots (2 * seatSize + 1 * spacing)
+        val seatWidth = (seatSize * 2) + seatSpacing
+        val rect = RectF(x, y, x + seatWidth, y + seatSize)
+
+        seatPaint.color = Color.parseColor(seat.type.color)
+        canvas.drawRoundRect(rect, 12f, 12f, seatPaint)
+        canvas.drawRoundRect(rect, 12f, 12f, seatStrokePaint)
+
+        // Draw divider in the middle
+        val dividerPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+            color = Color.WHITE
+            strokeWidth = 2f
+            style = Paint.Style.STROKE
+            alpha = 100
+        }
+        val dividerX = x + seatWidth / 2
+        canvas.drawLine(dividerX, y + seatSize * 0.2f, dividerX, y + seatSize * 0.8f, dividerPaint)
+
+        if (seat.isSelected) {
+            canvas.drawRoundRect(rect, 12f, 12f, selectedStrokePaint)
+
+            val checkPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+                color = Color.parseColor("#FFD700")
+                strokeWidth = 5f
+                style = Paint.Style.STROKE
+                strokeCap = Paint.Cap.ROUND
+            }
+            val cx = x + seatWidth / 2
+            val cy = y + seatSize / 2
+            val size = seatSize * 0.3f
+
+            val path = Path().apply {
+                moveTo(cx - size / 2, cy)
+                lineTo(cx - size / 6, cy + size / 2)
+                lineTo(cx + size / 2, cy - size / 3)
+            }
+            canvas.drawPath(path, checkPaint)
+        }
+
+        // Draw seat number (centered on the wider seat)
+        val seatNumberPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+            color = Color.WHITE
+            textSize = seatSize * 0.35f
+            textAlign = Paint.Align.CENTER
+            typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
+        }
+        val seatNumber = seat.name.substring(1)
+        canvas.drawText(
+            seatNumber,
+            x + seatWidth / 2,
+            y + seatSize / 2 + seatNumberPaint.textSize / 3,
+            seatNumberPaint
+        )
+
+        // Draw heart icon for couple seat
+        val heartPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+            color = Color.parseColor("#FF69B4")
+            style = Paint.Style.FILL
+            alpha = 150
+        }
+        val heartSize = seatSize * 0.2f
+        val heartX = x + seatWidth / 2
+        val heartY = y + seatSize * 0.25f
+        drawHeart(canvas, heartX, heartY, heartSize, heartPaint)
+
+        // Draw 4 legs for couple seat
+        val legPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+            color = Color.parseColor("#ECF0F1")
+            strokeWidth = 3f
+            style = Paint.Style.STROKE
+        }
+        val legHeight = 8f
+        val legSpacing = seatWidth / 3
+        canvas.drawLine(x + legSpacing * 0.5f, y + seatSize, x + legSpacing * 0.5f, y + seatSize + legHeight, legPaint)
+        canvas.drawLine(x + legSpacing * 1f, y + seatSize, x + legSpacing * 1f, y + seatSize + legHeight, legPaint)
+        canvas.drawLine(x + legSpacing * 2f, y + seatSize, x + legSpacing * 2f, y + seatSize + legHeight, legPaint)
+        canvas.drawLine(x + legSpacing * 2.5f, y + seatSize, x + legSpacing * 2.5f, y + seatSize + legHeight, legPaint)
+    }
+
+    private fun drawHeart(canvas: Canvas, cx: Float, cy: Float, size: Float, paint: Paint) {
+        val path = Path().apply {
+            moveTo(cx, cy + size * 0.3f)
+
+            // Left curve
+            cubicTo(
+                cx - size * 0.5f, cy - size * 0.3f,
+                cx - size, cy + size * 0.1f,
+                cx, cy + size
+            )
+
+            // Right curve
+            cubicTo(
+                cx + size, cy + size * 0.1f,
+                cx + size * 0.5f, cy - size * 0.3f,
+                cx, cy + size * 0.3f
+            )
+            close()
+        }
+        canvas.drawPath(path, paint)
+    }
+
+    private fun drawOccupiedSeat(canvas: Canvas, rect: RectF, x: Float, y: Float, seat: Seat) {
+        // Check if this is a couple seat
+        val isCoupleSeat = seat.type.name.contains("Couple", ignoreCase = true)
+
+        // Couple seat occupies 2 seat slots
+        val seatWidth = if (isCoupleSeat) (seatSize * 2) + seatSpacing else seatSize
+        val adjustedRect = RectF(x, y, x + seatWidth, y + seatSize)
+
+        // Draw seat with darker gradient
         val gradient = LinearGradient(
-            rect.left, rect.top,
-            rect.left, rect.bottom,
-            Color.parseColor("#95A5A6"),
+            adjustedRect.left, adjustedRect.top,
+            adjustedRect.left, adjustedRect.bottom,
             Color.parseColor("#7F8C8D"),
+            Color.parseColor("#5D6D7E"),
             Shader.TileMode.CLAMP
         )
         occupiedPaint.shader = gradient
-        canvas.drawRoundRect(rect, 12f, 12f, occupiedPaint)
+        canvas.drawRoundRect(adjustedRect, 12f, 12f, occupiedPaint)
         occupiedPaint.shader = null
 
-        // Draw border
-        canvas.drawRoundRect(rect, 12f, 12f, occupiedStrokePaint)
+        // Draw darker border
+        canvas.drawRoundRect(adjustedRect, 12f, 12f, occupiedStrokePaint)
 
         // Draw diagonal stripes pattern
-//        val stripeSpacing = seatSize / 5
-//        for (i in 0..8) {
-//            val startX = x + (i * stripeSpacing) - seatSize
-//            val startY = y
-//            val endX = x + (i * stripeSpacing)
-//            val endY = y + seatSize
-//            canvas.drawLine(startX, startY, endX, endY, occupiedPatternPaint)
-//        }
-
-        // Draw lock icon in the center
-        val cx = x + seatSize / 2
-        val cy = y + seatSize / 2
-        val lockSize = seatSize * 0.35f
-
-        // Lock body
-        val lockBodyRect = RectF(
-            cx - lockSize / 3,
-            cy - lockSize / 6,
-            cx + lockSize / 3,
-            cy + lockSize / 2.5f
-        )
-        val lockBodyPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-            color = Color.parseColor("#BDC3C7")
-            style = Paint.Style.FILL
-        }
-        canvas.drawRoundRect(lockBodyRect, 8f, 8f, lockBodyPaint)
-
-        // Lock shackle (arc)
-        val shacklePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-            color = Color.parseColor("#BDC3C7")
+        val stripePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+            color = Color.parseColor("#596270")
             style = Paint.Style.STROKE
-            strokeWidth = 5f
+            strokeWidth = 3f
+        }
+        val stripeSpacing = seatSize / 4
+        for (i in -2..6) {
+            val startX = x + (i * stripeSpacing)
+            val startY = y
+            val endX = startX + seatWidth
+            val endY = y + seatSize
+            canvas.drawLine(startX, startY, endX, endY, stripePaint)
+        }
+
+        // Draw "X" mark in the center
+        val cx = x + seatWidth / 2
+        val cy = y + seatSize / 2
+        val xSize = seatSize * 0.4f
+
+        val xPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+            color = Color.parseColor("#ECF0F1")
+            style = Paint.Style.STROKE
+            strokeWidth = 6f
             strokeCap = Paint.Cap.ROUND
         }
-        val shackleRect = RectF(
-            cx - lockSize / 4,
-            cy - lockSize / 2,
-            cx + lockSize / 4,
-            cy
-        )
-        canvas.drawArc(shackleRect, 180f, 180f, false, shacklePaint)
 
-        // Keyhole
-        val keyholePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-            color = Color.parseColor("#7F8C8D")
-            style = Paint.Style.FILL
+        // Draw X
+        canvas.drawLine(
+            cx - xSize / 2, cy - xSize / 2,
+            cx + xSize / 2, cy + xSize / 2,
+            xPaint
+        )
+        canvas.drawLine(
+            cx + xSize / 2, cy - xSize / 2,
+            cx - xSize / 2, cy + xSize / 2,
+            xPaint
+        )
+
+        // Add legs to occupied seat
+        val legPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+            color = Color.parseColor("#5D6D7E")
+            strokeWidth = 3f
+            style = Paint.Style.STROKE
         }
-        canvas.drawCircle(cx, cy + lockSize / 8, lockSize / 10, keyholePaint)
+        val legHeight = 8f
 
-        val keyholeSlotRect = RectF(
-            cx - lockSize / 20,
-            cy + lockSize / 8,
-            cx + lockSize / 20,
-            cy + lockSize / 3.5f
-        )
-        canvas.drawRect(keyholeSlotRect, keyholePaint)
+        if (isCoupleSeat) {
+            // 4 legs for couple seat
+            val legSpacing = seatWidth / 3
+            canvas.drawLine(x + legSpacing * 0.5f, y + seatSize, x + legSpacing * 0.5f, y + seatSize + legHeight, legPaint)
+            canvas.drawLine(x + legSpacing * 1f, y + seatSize, x + legSpacing * 1f, y + seatSize + legHeight, legPaint)
+            canvas.drawLine(x + legSpacing * 2f, y + seatSize, x + legSpacing * 2f, y + seatSize + legHeight, legPaint)
+            canvas.drawLine(x + legSpacing * 2.5f, y + seatSize, x + legSpacing * 2.5f, y + seatSize + legHeight, legPaint)
+        } else {
+            // 2 legs for normal seat
+            canvas.drawLine(x + 15f, y + seatSize, x + 15f, y + seatSize + legHeight, legPaint)
+            canvas.drawLine(x + seatWidth - 15f, y + seatSize, x + seatWidth - 15f, y + seatSize + legHeight, legPaint)
+        }
     }
 
     fun getSelectedSeats(): List<Seat> {

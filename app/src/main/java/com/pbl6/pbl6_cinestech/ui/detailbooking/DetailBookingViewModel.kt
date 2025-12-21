@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
+import com.pbl6.pbl6_cinestech.data.model.request.AuthEvent
 import com.pbl6.pbl6_cinestech.data.model.response.BranchResponse
 import com.pbl6.pbl6_cinestech.data.model.response.ItemWrapper
 import com.pbl6.pbl6_cinestech.data.model.response.Response
@@ -15,8 +16,10 @@ import com.pbl6.pbl6_cinestech.data.repository.BranchRepository
 import com.pbl6.pbl6_cinestech.data.repository.MovieRepository
 import com.pbl6.pbl6_cinestech.data.repository.ShowTimeRepository
 import hoang.dqm.codebase.base.viewmodel.BaseViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
+import retrofit2.HttpException
 
 class DetailBookingViewModel(
     private val movieRepository: MovieRepository,
@@ -27,6 +30,9 @@ class DetailBookingViewModel(
         super.onCreate(owner)
 //        getAllBranchResult()
     }
+
+    private val _authEvent = MutableSharedFlow<AuthEvent>()
+    val authEvent = _authEvent
 
     private val _branchBookingResult = MutableStateFlow<Response<BranchResponse>?>(null)
     val branchBookingResult: MutableStateFlow<Response<BranchResponse>?> = _branchBookingResult
@@ -60,6 +66,7 @@ class DetailBookingViewModel(
                 val response = branchRepository.getBranchesWithMovieId(movieId)
                 _allBranchResult.value = response
             } catch (e: Exception) {
+                Log.e("showTimeView", "detail error: ${e.message}", e)
             }
         }
     }
@@ -74,9 +81,17 @@ class DetailBookingViewModel(
                 Log.d("BOOKING_JSON", "$response")
 
                 _showTimeResponse.value = response
-            }catch (e: Exception){
-                Log.e("showTimeView", "Login error: ${e.message}", e)
+            }catch (e: HttpException) {
+                if (e.code() == 401) {
+                    Log.e("showTimeView", "Unauthorized - chưa đăng nhập hoặc token hết hạn")
+                    _authEvent.emit(AuthEvent.RequireLogin)
 
+                } else {
+                    Log.e("showTimeView", "HTTP error ${e.code()}")
+                }
+            }
+            catch (e: Exception){
+                Log.e("showTimeView", "Login error: ${e.message}", e)
             }
         }
     }

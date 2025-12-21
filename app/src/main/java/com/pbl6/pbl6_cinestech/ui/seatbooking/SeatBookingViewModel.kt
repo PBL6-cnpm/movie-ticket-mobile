@@ -18,6 +18,7 @@ import hoang.dqm.codebase.base.viewmodel.BaseViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
+import retrofit2.HttpException
 
 class SeatBookingViewModel(
     private val seatRepository: SeatRepository,
@@ -60,7 +61,25 @@ class SeatBookingViewModel(
             try {
                 val response = bookingRepository.holdSeat(bookingRequest)
                 _holdSeatResult.emit(response)
-            }catch (e: Exception){
+            }catch (e: HttpException) {
+                when (e.code()) {
+                    409 -> {
+                        val errorBody = e.response()?.errorBody()?.string()
+                        Log.e("API_ERROR", "Conflict: $errorBody")
+                        _holdSeatResult.emit(Response(
+                            success = false,
+                            statusCode = 400,
+                            message = "Oops! This seat has already been held or booked by someone else. Please choose another seat.",
+                            code = "BOOKING_EXPIRED",
+                            data = null
+                        ))
+                    }
+                    401 -> {
+                        Log.e("API_ERROR", "Other HTTP error: ${e.code()}")
+                    }
+                }
+            }
+            catch (e: Exception){
                 Log.e("check hold", "hold error: ${e.message}", e)
 
             }

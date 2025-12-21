@@ -1,12 +1,13 @@
 package com.pbl6.pbl6_cinestech.ui.payment_information
 
-import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.pbl6.pbl6_cinestech.R
 import com.pbl6.pbl6_cinestech.data.model.request.ApplyVoucherRequest
@@ -17,18 +18,17 @@ import com.pbl6.pbl6_cinestech.data.repository.RepositoryProvider
 import com.pbl6.pbl6_cinestech.databinding.FragmentPaymentInformationBinding
 import com.pbl6.pbl6_cinestech.ui.main.MainViewModel
 import com.pbl6.pbl6_cinestech.ui.voucher_page.VoucherSelectBottomSheet
-import com.pbl6.pbl6_cinestech.utils.AppConstants
 import com.stripe.android.paymentsheet.PaymentSheet
 import com.stripe.android.paymentsheet.PaymentSheetResult
 import hoang.dqm.codebase.base.activity.BaseFragment
 import hoang.dqm.codebase.base.activity.navigate
 import hoang.dqm.codebase.base.activity.onBackPressed
 import hoang.dqm.codebase.base.activity.popBackStack
-import hoang.dqm.codebase.base.activity.showDialog
 import hoang.dqm.codebase.utils.loadImageSketch
 import hoang.dqm.codebase.utils.singleClick
 
-class PaymentInformationFragment : BaseFragment<FragmentPaymentInformationBinding, PaymentInformationViewModel>() {
+class PaymentInformationFragment :
+    BaseFragment<FragmentPaymentInformationBinding, PaymentInformationViewModel>() {
     override val viewModelFactory: ViewModelProvider.Factory
         get() = PaymentInformationViewModel.PaymentInformationViewModelFactory(
             RepositoryProvider.bookingRepository,
@@ -41,7 +41,7 @@ class PaymentInformationFragment : BaseFragment<FragmentPaymentInformationBindin
     private val bookingId by lazy {
         arguments?.getString("bookingId") ?: ""
     }
-    private val mainViewModel by activityViewModels <MainViewModel>()
+    private val mainViewModel by activityViewModels<MainViewModel>()
     private val seatIds by lazy {
         arguments?.getStringArrayList("seatIds") ?: arrayListOf()
     }
@@ -78,7 +78,16 @@ class PaymentInformationFragment : BaseFragment<FragmentPaymentInformationBindin
         }
         binding.btnNext.singleClick {
             binding.btnNext.isEnabled = false
-            viewModel.bookingSeat(BookingRequest(bookingId, mainViewModel.getListRefreshments().map { RefreshmentsOrder(it.refreshmentId, it.quantity) }, viewModel.applyVoucherResponseLiveData.value?.data?.code))
+            viewModel.bookingSeat(
+                BookingRequest(
+                    bookingId,
+                    mainViewModel.getListRefreshments()
+                        .map { RefreshmentsOrder(it.refreshmentId, it.quantity) },
+                    viewModel.applyVoucherResponseLiveData.value?.data?.code
+                )
+            )
+            binding.lottieLoading.visibility = View.VISIBLE
+            binding.lottieLoading.playAnimation()
         }
 
         binding.selectVoucher.singleClick {
@@ -90,7 +99,7 @@ class PaymentInformationFragment : BaseFragment<FragmentPaymentInformationBindin
     override fun initData() {
     }
 
-    private fun updateUI(){
+    private fun updateUI() {
         adjustInsetsForBottomNavigation(binding.btnBack)
         val movie = mainViewModel.getMovieSelected()
         val branch = mainViewModel.getBranchSelected()
@@ -109,8 +118,10 @@ class PaymentInformationFragment : BaseFragment<FragmentPaymentInformationBindin
         binding.seat.text = seatNumbers.joinToString(", ")
         binding.ticketPrice.text = formatVND(ticketsPrice.toLong())
         binding.refreshmentsPrice.text = formatVND(refreshmentPrice.toLong())
-        val price = if (viewModel.applyVoucherResponseLiveData.value == null) (ticketsPrice) else viewModel.applyVoucherResponseLiveData.value?.data?.finalPrice
-        binding.total.text = formatVND((price?.toLong()?: (ticketsPrice).toLong())+refreshmentPrice)
+        val price =
+            if (viewModel.applyVoucherResponseLiveData.value == null) (ticketsPrice) else viewModel.applyVoucherResponseLiveData.value?.data?.finalPrice
+        binding.total.text =
+            formatVND((price?.toLong() ?: (ticketsPrice).toLong()) + refreshmentPrice)
         Log.d("check price", "updateUI: $price $ticketsPrice $refreshmentPrice")
         binding.showTime.text = timeText
         binding.name.text = account.fullName
@@ -120,39 +131,80 @@ class PaymentInformationFragment : BaseFragment<FragmentPaymentInformationBindin
         }
     }
 
-    private fun setUpObserver(){
-        viewModel.paymentResultLiveData.observe(viewLifecycleOwner) { value ->
-            if (value?.success == true) {
-                if (value.data == null) return@observe
-                clientSecret = value.data.clientSecret
-                if (clientSecret.isBlank()) {
-                    Toast.makeText(requireContext(),
-                        "Missing clientSecret!", Toast.LENGTH_SHORT).show()
-                    return@observe
+    private fun setUpObserver() {
+        lifecycleScope.launchWhenStarted {
+            viewModel.paymentResult.collect { value ->
+                if (value?.success == true) {
+                    if (value.data == null) return@collect
+                    binding.lottieLoading.visibility = View.GONE
+                    clientSecret = value.data.clientSecret
+                    if (clientSecret.isBlank()) {
+                        Toast.makeText(
+                            requireContext(),
+                            "Missing clientSecret!", Toast.LENGTH_SHORT
+                        ).show()
+                        return@collect
+                    }
+                    val config = PaymentSheet.Configuration(
+                        merchantDisplayName = "CineStech"
+                    )
+                    paymentSheet.presentWithPaymentIntent(clientSecret, config)
+                    binding.btnNext.isEnabled = true
+                } else {
+                    binding.btnNext.isEnabled = true
+                    binding.lottieLoading.visibility = View.GONE
                 }
-                val config = PaymentSheet.Configuration(
-                    merchantDisplayName = "CineStech"
-                )
-                paymentSheet.presentWithPaymentIntent(clientSecret, config)
-                binding.btnNext.isEnabled = true
-            } else {
-                binding.btnNext.isEnabled = true
             }
         }
-
-        viewModel.bookingResultLiveData.observe(viewLifecycleOwner){value ->
-            if (value?.success == true) {
-                if (value.data == null) return@observe
-                viewModel.createPayment(PaymentRequest(value.data.bookingId))
+//        viewModel.paymentResultLiveData.observe(viewLifecycleOwner) { value ->
+//            if (value?.success == true) {
+//                if (value.data == null) return@observe
+//                binding.lottieLoading.visibility = View.GONE
+//                clientSecret = value.data.clientSecret
+//                if (clientSecret.isBlank()) {
+//                    Toast.makeText(requireContext(),
+//                        "Missing clientSecret!", Toast.LENGTH_SHORT).show()
+//                    return@observe
 //                }
-            } else if (value?.success == false){
-                binding.btnNext.isEnabled = true
-                showDialogBookAgain()
+//                val config = PaymentSheet.Configuration(
+//                    merchantDisplayName = "CineStech"
+//                )
+//                paymentSheet.presentWithPaymentIntent(clientSecret, config)
+//                binding.btnNext.isEnabled = true
+//            } else {
+//                binding.btnNext.isEnabled = true
+//                binding.lottieLoading.visibility = View.GONE
+//            }
+//        }
+
+//        viewModel.bookingResultLiveData.observe(viewLifecycleOwner) { value ->
+//            Log.d("BOOKING_JSON", "call")
+//            if (value?.success == true) {
+//                if (value.data == null) return@observe
+//                viewModel.createPayment(PaymentRequest(value.data.bookingId))
+//                  }
+//            } else if (value?.success == false) {
+//                binding.btnNext.isEnabled = true
+//                binding.lottieLoading.visibility = View.GONE
+//                showDialogBookAgain()
+//            }
+//        }
+
+        lifecycleScope.launchWhenStarted {
+            viewModel.bookingResult.collect { value ->
+                if (value?.success == true) {
+                    if (value.data == null) return@collect
+                    viewModel.createPayment(PaymentRequest(value.data.bookingId))
+                } else if (value?.success == false) {
+                    binding.btnNext.isEnabled = true
+                    binding.lottieLoading.visibility = View.GONE
+                    showDialogBookAgain()
+                }
             }
         }
 
-        mainViewModel.voucherSelected.observe(viewLifecycleOwner){value ->
-            if (value!= null){
+        mainViewModel.voucherSelected.observe(viewLifecycleOwner) { value ->
+            if (value != null) {
                 binding.voucherTextIsSelect.text = "${value.code} >"
                 viewModel.applyVoucher(ApplyVoucherRequest(bookingId, value.code))
             } else {
@@ -161,11 +213,12 @@ class PaymentInformationFragment : BaseFragment<FragmentPaymentInformationBindin
         }
 
         viewModel.applyVoucherResponseLiveData.observe(viewLifecycleOwner) { value ->
-            if (value?.success == true){
+            if (value?.success == true) {
                 if (value.data == null) return@observe
                 binding.voucherTextIsSelect.text = "${value.data.code} >"
                 binding.voucher.text = formatVND(value.data.voucherAmount.toLong())
-                binding.total.text = formatVND(value.data.finalPrice.toLong()+ refreshmentPrice)
+                binding.total.text = formatVND(value.data.finalPrice.toLong())
+
             }
 
         }
@@ -187,39 +240,46 @@ class PaymentInformationFragment : BaseFragment<FragmentPaymentInformationBindin
     private fun onPaymentSheetResult(result: PaymentSheetResult) {
         when (result) {
             is PaymentSheetResult.Completed -> {
-                Toast.makeText(requireContext(),
-                    "Payment success!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    requireContext(),
+                    "Payment success!", Toast.LENGTH_SHORT
+                ).show()
                 Log.d("payment", "Success")
                 navigate(R.id.bookingHistoryFragment, isPop = true)
             }
 
             is PaymentSheetResult.Canceled -> {
-                Toast.makeText(requireContext(),
-                    "Payment canceled", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    requireContext(),
+                    "Payment canceled", Toast.LENGTH_SHORT
+                ).show()
                 Log.d("payment", "Canceled")
             }
 
             is PaymentSheetResult.Failed -> {
-                Toast.makeText(requireContext(),
+                Toast.makeText(
+                    requireContext(),
                     "Payment failed: ${result.error.localizedMessage}",
-                    Toast.LENGTH_LONG).show()
+                    Toast.LENGTH_LONG
+                ).show()
                 Log.e("payment", "Error", result.error)
             }
         }
     }
 
-    fun showDialogBookAgain(){
+    fun showDialogBookAgain() {
         if (!isAdded || isDetached || view == null) return
         context?.let { ctx ->
             val dialogView = layoutInflater.inflate(R.layout.dialog_book_again, null)
-            val dialog = AlertDialog.Builder(ctx).setView(dialogView).setCancelable(false).create()
+            val dialog =
+                AlertDialog.Builder(ctx).setView(dialogView).setCancelable(false).create()
             dialogView.findViewById<ImageView>(R.id.btn_home).singleClick {
                 popBackStack(R.id.homeFragment)
                 dialog.dismiss()
 
             }
             dialogView.findViewById<ImageView>(R.id.btn_book_again).singleClick {
-                navigate(R.id.detailBookingFragment)
+                popBackStack(R.id.detailBookingFragment)
                 dialog.dismiss()
             }
             dialog.window?.setBackgroundDrawableResource(R.color.black_88000000)

@@ -66,6 +66,7 @@ class SeatBookingFragment : BaseFragment<FragmentSeatBookingBinding, SeatBooking
         setUpObserver()
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     fun setUpObserver() {
         collectLatestFlow(viewModel.allSeatResult) { value ->
             if (value?.success == true) {
@@ -137,9 +138,10 @@ class SeatBookingFragment : BaseFragment<FragmentSeatBookingBinding, SeatBooking
                 } else if (value?.success == false) {
                     Toast.makeText(
                         requireContext(),
-                        getString(R.string.text_something_went_wrong_please_try_again),
+                        value.message,
                         Toast.LENGTH_SHORT
                     ).show()
+                    reloadPage()
                 }
             }
         }
@@ -226,7 +228,7 @@ class SeatBookingFragment : BaseFragment<FragmentSeatBookingBinding, SeatBooking
     fun formatVND(amount: Long) = "%,d₫".format(amount).replace(',', '.')
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun reloadPage(idShowTime: String, timeStart: String) {
+    private fun reloadPage(idShowTime: String= this.idShowTime, timeStart: String = this.timeStart) {
         // Reset UI
         updateUI(timeStart)
 

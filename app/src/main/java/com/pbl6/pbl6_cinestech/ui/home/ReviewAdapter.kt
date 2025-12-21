@@ -28,7 +28,7 @@ class ReviewAdapter : BaseRecyclerViewAdapter<ReviewResponse, ItemReviewBinding>
         binding.tvRated.text = context.getString(R.string.text_rate_5, item.rating)
         binding.tvComment.text = item.comment
         binding.imgRated.setImageResource(
-            when (item.rating){
+            when ((item.rating/2).toInt()){
                 1 -> R.drawable.img_star_1
                 2 -> R.drawable.img_star_2
                 3 -> R.drawable.img_star_3

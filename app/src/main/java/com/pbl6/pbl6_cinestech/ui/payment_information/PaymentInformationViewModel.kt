@@ -18,6 +18,7 @@ import com.pbl6.pbl6_cinestech.data.model.response.VoucherResponse
 import com.pbl6.pbl6_cinestech.data.repository.BookingRepository
 import com.pbl6.pbl6_cinestech.data.repository.PaymentRepository
 import hoang.dqm.codebase.base.viewmodel.BaseViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -26,14 +27,18 @@ class PaymentInformationViewModel(
     private val bookingRepository: BookingRepository,
     private val paymentRepository: PaymentRepository
 ): BaseViewModel() {
-    private val _paymentResult = MutableStateFlow<Response<PaymentResponse>?>(null)
-    val paymentResult: MutableStateFlow<Response<PaymentResponse>?> = _paymentResult
-    val paymentResultLiveData = paymentResult.asLiveData()
+//    private val _paymentResult = MutableStateFlow<Response<PaymentResponse>?>(null)
+//    val paymentResult: MutableStateFlow<Response<PaymentResponse>?> = _paymentResult
+//    val paymentResultLiveData = paymentResult.asLiveData()
+    private val _paymentResult = MutableSharedFlow<Response<PaymentResponse>>()
+    val paymentResult = _paymentResult
     fun createPayment(paymentRequest: PaymentRequest) {
         viewModelScope.launch {
             try {
+                Log.d("PAYMENT_JSON", "$paymentRequest")
                 val response = paymentRepository.createPaymentIntent(paymentRequest)
-                _paymentResult.value = response
+                _paymentResult.emit(response)
+                Log.d("PAYMENT_JSON", "$response")
             } catch (e: Exception) {
                 Log.e("LoginViewModel", "Login error: ${e.message}", e)
             }
@@ -46,7 +51,9 @@ class PaymentInformationViewModel(
     fun applyVoucher(applyVoucherRequest: ApplyVoucherRequest){
         viewModelScope.launch {
             try {
+                Log.d("BOOKING_JSON", "$applyVoucherRequest")
                 val response = bookingRepository.applyVoucher(applyVoucherRequest)
+                Log.d("BOOKING_JSON", "$response")
                 _applyVoucherResponse.value = response
             }catch (e: Exception){
                 Log.e("LoginViewModel", "Login error: ${e.message}", e)
@@ -54,25 +61,27 @@ class PaymentInformationViewModel(
             }
         }
     }
-    private val _bookingSeatResult = MutableStateFlow<Response<BookingSeatResponse>?>(null)
-    val bookingSeatResult = _bookingSeatResult
-    val bookingResultLiveData = bookingSeatResult.asLiveData()
+//    private val _bookingSeatResult = MutableStateFlow<Response<BookingSeatResponse>?>(null)
+//    val bookingSeatResult = _bookingSeatResult
+//    val bookingResultLiveData = bookingSeatResult.asLiveData()
+    private val _bookingSeatResult = MutableSharedFlow<Response<BookingSeatResponse>>()
+    val bookingResult = _bookingSeatResult
     fun bookingSeat(bookingRequest: BookingRequest) {
         viewModelScope.launch {
             try {
                 Log.d("BOOKING_JSON", Gson().toJson(bookingRequest))
                 val response = bookingRepository.bookingSeat(bookingRequest)
                 Log.d("BOOKING_JSON", "$response")
-                _bookingSeatResult.value = response
+                _bookingSeatResult.emit(response)
             } catch (e: Exception) {
                 Log.e("LoginViewModel", "Login error: ${e.message}", e)
-                _bookingSeatResult.value = Response(
+                _bookingSeatResult.emit(Response(
                     success = false,
                     statusCode = 400,
                     message = "Oops! Your drawing reservation was cancelled because it exceeded the holding time. Please book again to continue.",
                     code = "BOOKING_EXPIRED",
                     data = null
-                )
+                ))
             }
         }
     }

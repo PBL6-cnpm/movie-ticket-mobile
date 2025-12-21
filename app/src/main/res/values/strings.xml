@@ -39,7 +39,7 @@
     <string name="text_now_showing">Now Showing</string>
     <string name="text_no_reviews_yet">No reviews yet.</string>
     <string name="text_review">Review: %1$s</string>
-    <string name="text_rate_5">⭐ %1$d/5</string>
+    <string name="text_rate_5">⭐ %1$d/10</string>
     <string name="text_movie_information">Movie Information</string>
     <string name="text_trailer">Trailer</string>
     <string name="text_premiere_date">Premiere date</string>
@@ -107,4 +107,6 @@
     <string name="text_find_show">Find show</string>
     <string name="text_reschedule_showtime">Reschedule showtime</string>
     <string name="text_select">Select</string>
+    <string name="text_please_log_in_to_continue">Please log in to continue</string>
+    <string name="text_this_movie_isn_t_available_yet_please_check_back_soon">This movie isn’t available yet. Please check back soon.</string>
 </resources>

@@ -31,9 +31,9 @@ class AuthInterceptor(
         var response = chain.proceed(request)
 
         if (!noAuth && response.code == 401) {
-            response.close()
             val newAccessToken = runBlocking { refreshToken() }
             if (!newAccessToken.isNullOrEmpty()) {
+                response.close()
                 val newRequest = request.newBuilder()
                     .header("Authorization", "Bearer $newAccessToken")
                     .build()

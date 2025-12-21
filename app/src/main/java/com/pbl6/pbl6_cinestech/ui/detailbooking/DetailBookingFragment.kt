@@ -3,12 +3,16 @@ package com.pbl6.pbl6_cinestech.ui.detailbooking
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.view.View
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.pbl6.pbl6_cinestech.R
+import com.pbl6.pbl6_cinestech.data.model.request.AuthEvent
 import com.pbl6.pbl6_cinestech.data.model.response.CinemaShowTime
 import com.pbl6.pbl6_cinestech.data.model.response.DayOfWeek
 import com.pbl6.pbl6_cinestech.data.repository.RepositoryProvider
@@ -19,6 +23,7 @@ import hoang.dqm.codebase.base.activity.navigate
 import hoang.dqm.codebase.base.activity.onBackPressed
 import hoang.dqm.codebase.base.activity.popBackStack
 import hoang.dqm.codebase.utils.singleClick
+import kotlinx.coroutines.launch
 import java.time.Instant
 import java.time.LocalDate
 import java.time.OffsetDateTime
@@ -71,6 +76,8 @@ class DetailBookingFragment : BaseFragment<FragmentDetailBookingBinding, DetailB
     @RequiresApi(Build.VERSION_CODES.O)
     override fun initView() {
         adjustInsetsForBottomNavigation(binding.btnBack)
+        binding.lottieLoading.isVisible = true
+        binding.lottieLoading.playAnimation()
 //        movieId?.let {
 //            viewModel.getBranchWithMovieId(it)
 //        }
@@ -148,26 +155,40 @@ class DetailBookingFragment : BaseFragment<FragmentDetailBookingBinding, DetailB
 //            }
 //
 //        }
-
+        lifecycleScope.launch {
+            viewModel.authEvent.collect {
+                if (it is AuthEvent.RequireLogin) {
+                    Toast.makeText(requireContext(),
+                        getString(R.string.text_please_log_in_to_continue), Toast.LENGTH_LONG).show()
+                    navigate(R.id.loginFragment, isPop = true)
+                }
+            }
+        }
 
         viewModel.allBranchResultLiveData.observe(viewLifecycleOwner) { value ->
             if (value?.success == true) {
                 if (value.data == null) return@observe
                 adapterBranch.setList(value.data)
-                Log.d("BOOKING_JSON", "call show time")
+                Log.d("DETAIL_MOVIE", "call show time ${value.data}")
+                if (value.data.isEmpty()){
+                    binding.lottieLoading.visibility = View.GONE
+                    binding.commingSoon.visibility = View.VISIBLE
 
-                movieId?.let {
-                    viewModel.getShowTimeWithBranchAndMovie(
-                        it,
-                        adapterBranch.getSelectedBranch().id
-                    )
+                }else{
+                    binding.commingSoon.visibility = View.GONE
+                    movieId?.let {
+                        viewModel.getShowTimeWithBranchAndMovie(
+                            it,
+                            adapterBranch.getSelectedBranch().id
+                        )
+                    }
                 }
-
             }
         }
 
         viewModel.showTimeResponseLiveData.observe(viewLifecycleOwner) { value ->
             if (value?.success == true) {
+                    binding.lottieLoading.visibility = View.GONE
                 if (value.data != null && !value.data.items.isEmpty()) {
                     val showTime = value.data.items.find { it ->
                         isSameDayVN(
@@ -208,6 +229,9 @@ class DetailBookingFragment : BaseFragment<FragmentDetailBookingBinding, DetailB
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun initListener() {
+        binding.btnGoDraw.singleClick {
+            popBackStack(R.id.homeFragment)
+        }
         binding.btnBack.singleClick { popBackStack() }
         onBackPressed {
             popBackStack()
